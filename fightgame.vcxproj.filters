@@ -1,0 +1,291 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{f9058d8d-3df2-4b96-9f74-c7fed904787a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{cc150a2c-b34e-49c1-8685-42d134b6a708}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character">
+      <UniqueIdentifier>{1ac5a46c-9daf-4349-a6f8-572dd257b665}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Factory">
+      <UniqueIdentifier>{b0fe0957-a561-4ea3-b6b9-41e7be6d0fa1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DrawOrder">
+      <UniqueIdentifier>{06a32d27-5155-45bf-b147-d45a26fbba22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{c85fc363-ea2a-4c85-b445-9d63d6957794}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SkinMesh">
+      <UniqueIdentifier>{c8036c35-61f2-4edb-94d4-96ea93ca0f72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{97b3620a-e149-4bbd-b021-e167961c8d04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{9b6936bf-a234-4211-94a8-96b079fec4be}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Window\Application.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\CBoundingSphere.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\CDirect3DXFile.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\GameObj.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\Input.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\Math.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinMesh\CLoadPMX.cpp">
+      <Filter>SkinMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinMesh\CSkinMeshEffect.cpp">
+      <Filter>SkinMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinMesh\SkinMesh.cpp">
+      <Filter>SkinMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinMesh\VmdMotionController.cpp">
+      <Filter>SkinMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\LoadData.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SceneMgr.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawOrder\CGraphicsMeshBone.cpp">
+      <Filter>DrawOrder</Filter>
+    </ClCompile>
+    <ClCompile Include="Chr\CPlayer.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Chr\Enemy.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Chr\EnemyBase.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera\CCameraMng.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera\CamaraTPS.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Render.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="HitCheck.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="HitBox.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugMgr.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CBillBoard.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Background.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadHitData.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Gauge.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UserInterface.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleCamera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Adjust.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Window\Application.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\CBoundingSphere.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\CDebugFont.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\ComPointer.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\CDirect3DXFile.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\GameObj.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Input.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Math.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\SafeDelete.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\SmartPointer.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinMesh\CLoadPMX.h">
+      <Filter>SkinMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinMesh\CPathControll.h">
+      <Filter>SkinMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinMesh\Interface.h">
+      <Filter>SkinMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinMesh\MmdStruct.h">
+      <Filter>SkinMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinMesh\CSkinMeshEffect.h">
+      <Filter>SkinMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinMesh\PmxStruct.h">
+      <Filter>SkinMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinMesh\VmdMotionController.h">
+      <Filter>SkinMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinMesh\SkinMeshStruct.h">
+      <Filter>SkinMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinMesh\SkinMesh.h">
+      <Filter>SkinMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SceneMgr.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\LoadData.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Factory\CEffectFactory.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="Factory\CTextureFactory.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="Factory\FactoryBase.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawOrder\CGraphicsDrawList.h">
+      <Filter>DrawOrder</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawOrder\CGraphicsMeshBone.h">
+      <Filter>DrawOrder</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawOrder\CGraphicsOrderBase.h">
+      <Filter>DrawOrder</Filter>
+    </ClInclude>
+    <ClInclude Include="Chr\CCharacterMng.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Chr\CPlayer.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Chr\Enemy.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Chr\EnemyBase.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera\CamaraTPS.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera\CCameraMng.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugMgr.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CEffect.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CBillBoard.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Background.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Render.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Input_macro.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="HitCheck.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="HitBox.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Factory.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadHitData.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Gauge.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UserInterface.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleCamera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Adjust.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

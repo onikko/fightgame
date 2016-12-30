@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Adjust.cpp" />
+    <ClCompile Include="Background.cpp" />
+    <ClCompile Include="Camera\CamaraTPS.cpp" />
+    <ClCompile Include="Camera\CCameraMng.cpp" />
+    <ClCompile Include="CBillBoard.cpp" />
+    <ClCompile Include="Chr\CPlayer.cpp" />
+    <ClCompile Include="Chr\Enemy.cpp" />
+    <ClCompile Include="Chr\EnemyBase.cpp" />
+    <ClCompile Include="DebugMgr.cpp" />
+    <ClCompile Include="DrawOrder\CGraphicsMeshBone.cpp" />
+    <ClCompile Include="game.cpp" />
+    <ClCompile Include="HitBox.cpp" />
+    <ClCompile Include="HitCheck.cpp" />
+    <ClCompile Include="LoadHitData.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Render.cpp" />
+    <ClCompile Include="Scene\LoadData.cpp" />
+    <ClCompile Include="Scene\SceneMgr.cpp" />
+    <ClCompile Include="SimpleCamera.cpp" />
+    <ClCompile Include="SkinMesh\CLoadPMX.cpp" />
+    <ClCompile Include="SkinMesh\CSkinMeshEffect.cpp" />
+    <ClCompile Include="SkinMesh\SkinMesh.cpp" />
+    <ClCompile Include="SkinMesh\VmdMotionController.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="UI\Gauge.cpp" />
+    <ClCompile Include="UI\UserInterface.cpp" />
+    <ClCompile Include="Utilities\CBoundingSphere.cpp" />
+    <ClCompile Include="Utilities\CDirect3DXFile.cpp" />
+    <ClCompile Include="Utilities\GameObj.cpp" />
+    <ClCompile Include="Utilities\Input.cpp" />
+    <ClCompile Include="Utilities\Math.cpp" />
+    <ClCompile Include="Window\Application.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Adjust.h" />
+    <ClInclude Include="Background.h" />
+    <ClInclude Include="Camera\CamaraTPS.h" />
+    <ClInclude Include="Camera\CCameraMng.h" />
+    <ClInclude Include="CBillBoard.h" />
+    <ClInclude Include="CEffect.h" />
+    <ClInclude Include="Chr\CCharacterMng.h" />
+    <ClInclude Include="Chr\CPlayer.h" />
+    <ClInclude Include="Chr\Enemy.h" />
+    <ClInclude Include="Chr\EnemyBase.h" />
+    <ClInclude Include="DebugMgr.h" />
+    <ClInclude Include="DrawOrder\CGraphicsDrawList.h" />
+    <ClInclude Include="DrawOrder\CGraphicsMeshBone.h" />
+    <ClInclude Include="DrawOrder\CGraphicsOrderBase.h" />
+    <ClInclude Include="Factory.h" />
+    <ClInclude Include="Factory\CEffectFactory.h" />
+    <ClInclude Include="Factory\CTextureFactory.h" />
+    <ClInclude Include="Factory\FactoryBase.h" />
+    <ClInclude Include="game.h" />
+    <ClInclude Include="HitBox.h" />
+    <ClInclude Include="HitCheck.h" />
+    <ClInclude Include="Input_macro.h" />
+    <ClInclude Include="LoadHitData.h" />
+    <ClInclude Include="Render.h" />
+    <ClInclude Include="Scene\LoadData.h" />
+    <ClInclude Include="Scene\SceneMgr.h" />
+    <ClInclude Include="SimpleCamera.h" />
+    <ClInclude Include="SkinMesh\CLoadPMX.h" />
+    <ClInclude Include="SkinMesh\CPathControll.h" />
+    <ClInclude Include="SkinMesh\CSkinMeshEffect.h" />
+    <ClInclude Include="SkinMesh\Interface.h" />
+    <ClInclude Include="SkinMesh\MmdStruct.h" />
+    <ClInclude Include="SkinMesh\PmxStruct.h" />
+    <ClInclude Include="SkinMesh\SkinMesh.h" />
+    <ClInclude Include="SkinMesh\SkinMeshStruct.h" />
+    <ClInclude Include="SkinMesh\VmdMotionController.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="UI\Gauge.h" />
+    <ClInclude Include="UI\UserInterface.h" />
+    <ClInclude Include="Utilities\CBoundingSphere.h" />
+    <ClInclude Include="Utilities\CDebugFont.h" />
+    <ClInclude Include="Utilities\CDirect3DXFile.h" />
+    <ClInclude Include="Utilities\ComPointer.h" />
+    <ClInclude Include="Utilities\GameObj.h" />
+    <ClInclude Include="Utilities\Input.h" />
+    <ClInclude Include="Utilities\Math.h" />
+    <ClInclude Include="Utilities\SafeDelete.h" />
+    <ClInclude Include="Utilities\SmartPointer.h" />
+    <ClInclude Include="Window\Application.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B9EBCBE4-2BC2-4E6D-8EB7-DF045646CAFF}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>fightgame</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
