@@ -20,6 +20,8 @@ private:
 public:
 	CHitCheck();
 	~CHitCheck();
+	bool Hit(float center_x, float center_y, float scale_x, float scale_y, float offset_x, float offset_y,
+		float center_x1, float center_y1, float scale_x1, float scale_y1, float offset_x1, float offset_y1);
 	bool HitTest(float in_x, float in_y, float in_z, float in_radius, float in_x1, float in_y1, float in_z1, float in_radius1);
 	void Set(int in_id, float in_damege, bool in_flag);
 protected:

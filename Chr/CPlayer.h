@@ -36,6 +36,9 @@ private:
 	HIT HitAttack[HIT_ATTACK_POS];
 	int id;
 	float damege;
+
+	D3DXMATRIX worldMat;
+	D3DXMATRIX worldMatsample;
 public:
 	CPlayer(D3DXVECTOR3 angle, D3DXVECTOR3 translation, bool moveflag);
 	~CPlayer();
@@ -56,6 +59,9 @@ public:
 	CGauge* GetGaugeData(){ return gauge; }
 	int GetID(){ return id; }
 	float GetDamege(){ return damege; }
+
+	D3DXMATRIX GetSample(){ return worldMat; }
+	D3DXMATRIX GetSample1(){ return worldMatsample; }
 protected:
 	virtual void Init();
 	virtual void Input();

@@ -21,7 +21,8 @@ typedef struct {
 	bool loop_flag;
 }VMDDATA;
 VMDDATA g_vmddata[] = {
-	{ "asset/motion/down.vmd", false },
+	{ NULL, false },
+
 	{ "asset/motion/stand_1.vmd", true},
 	{ "asset/motion/walk_1.vmd" , true },
 	{ "asset/motion/‚’¼ƒWƒƒƒ“ƒv.vmd", true },
@@ -89,16 +90,7 @@ Vertex billboard_g[4] = {
 	{ D3DXVECTOR3(0.5f, 0.5f, -0.0f), D3DCOLOR_ARGB(100, 0, 255, 0), 1.0f, 0.0f }
 };
 
-Vertex billboard[4] = {
-	{ D3DXVECTOR3(-0.5f, -0.5f, -0.0f), D3DCOLOR_ARGB(100, 0, 255, 0), 0.0f, 1.0f },
-	{ D3DXVECTOR3(-0.5f, 0.2f, -0.0f), D3DCOLOR_ARGB(100, 0, 255, 0), 0.0f, 0.0f },
-	{ D3DXVECTOR3(0.5f, -0.5f, -0.0f), D3DCOLOR_ARGB(100, 0, 255, 0), 1.0f, 1.0f },
-	{ D3DXVECTOR3(0.5f, 0.2f, -0.0f), D3DCOLOR_ARGB(100, 0, 255, 0), 1.0f, 0.0f }
-};
-
 IDirect3DVertexBuffer9 *buffer = 0;
-IDirect3DVertexBuffer9 *g_buffer = 0;
-D3DXMATRIX worldMat;
 
 //--------------------------------------------------------------
 // CPlayer
@@ -183,22 +175,14 @@ void CPlayer::Init()
 		SAFE_RELEASE(m_lpd3d);
 		return;
 	}
-	if (FAILED(m_lpd3ddevice->CreateVertexBuffer(sizeof(Vertex) * 4, 0, VERTEX_FVF, D3DPOOL_MANAGED, &g_buffer, 0))) {
-		SAFE_RELEASE(m_lpd3ddevice);
-		SAFE_RELEASE(m_lpd3d);
-		return;
-	}
+
 	Vertex *p;
 	buffer->Lock(0, 0, (void**)&p, 0);
 	{
 		memcpy(p, billboard_g, sizeof(Vertex) * 4);
 		buffer->Unlock();
 	}
-	g_buffer->Lock(0, 0, (void**)&p, 0);
-	{
-		memcpy(p, billboard, sizeof(Vertex) * 4);
-		g_buffer->Unlock();
-	}
+
 	D3DXMatrixIdentity(&worldMat);
 }
 
@@ -358,6 +342,29 @@ void CPlayer::Render()
 	D3DXVECTOR3 m_wpos;
 	D3DXVECTOR3 pos;
 	D3DXMATRIX	maty;
+	D3DXMatrixIdentity(&worldMatsample);
+	pos = { 0.0f, 0.0f, 0.0f };
+	D3DXVec3TransformCoord(&m_wpos, &pos, &worldMatsample);
+	D3DXMatrixRotationY(&maty, (float)(90 / 180 * D3DX_PI));
+	worldMatsample = maty;
+	worldMatsample._11 = 0.5f;
+	worldMatsample._41 = m_wpos.x;
+	worldMatsample._42 = m_wpos.y;
+	worldMatsample._43 = 0.0f;
+
+	m_lpd3ddevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	m_lpd3ddevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+
+	// s—ñÝ’è
+	m_lpd3ddevice->SetTransform(D3DTS_WORLD, &worldMatsample);
+
+	// ”Âƒ|ƒŠ‚ð•`‰æ
+	m_lpd3ddevice->SetTexture(0, NULL);
+	m_lpd3ddevice->SetStreamSource(0, buffer, 0, sizeof(Vertex));
+	m_lpd3ddevice->SetFVF(VERTEX_FVF);
+	m_lpd3ddevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+
+
 	pos = { HitDefense[1].x, HitDefense[1].y, HitDefense[1].z };
 	D3DXVec3TransformCoord(&m_wpos, &pos, &m_MatWork);
 	D3DXMatrixRotationY(&maty, (float)(90 / 180 * D3DX_PI));
@@ -365,7 +372,7 @@ void CPlayer::Render()
 	worldMat._11 = 0.5f;
 	worldMat._41 = m_wpos.x;
 	worldMat._42 = m_wpos.y;
-	worldMat._43 = m_wpos.z;
+	worldMat._43 = 0.0f;
 
 	m_lpd3ddevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	m_lpd3ddevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
@@ -385,121 +392,6 @@ void CPlayer::Render()
 	// ”Âƒ|ƒŠ‚ð•`‰æ
 	m_lpd3ddevice->SetTexture(0, NULL);
 	m_lpd3ddevice->SetStreamSource(0, buffer, 0, sizeof(Vertex));
-	m_lpd3ddevice->SetFVF(VERTEX_FVF);
-	m_lpd3ddevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
-
-	D3DXMatrixIdentity(&worldMat);
-	pos = { HitAttack[0].x, HitAttack[0].y, HitAttack[0].z };
-	D3DXVec3TransformCoord(&m_wpos, &pos, &m_MatWork);
-	D3DXMatrixRotationY(&maty, (float)(90 / 180 * D3DX_PI));
-	worldMat = maty;
-	worldMat._11 = 0.3f;
-	worldMat._22 = 0.3f;
-	worldMat._41 = m_wpos.x;
-	worldMat._42 = m_wpos.y;
-	worldMat._43 = m_wpos.z;
-	for (int i = 0; i < 4; i++){
-		billboard_g[i].diffuse = D3DCOLOR_ARGB(100, 255, 0, 0);
-	}
-	buffer->Lock(0, 0, (void**)&p, 0);
-	{
-		memcpy(p, billboard_g, sizeof(Vertex) * 4);
-		buffer->Unlock();
-	}
-
-	// s—ñÝ’è
-	m_lpd3ddevice->SetTransform(D3DTS_WORLD, &worldMat);
-
-	// ”Âƒ|ƒŠ‚ð•`‰æ
-	m_lpd3ddevice->SetTexture(0, NULL);
-	m_lpd3ddevice->SetStreamSource(0, buffer, 0, sizeof(Vertex));
-	m_lpd3ddevice->SetFVF(VERTEX_FVF);
-	m_lpd3ddevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
-
-
-	D3DXMatrixIdentity(&worldMat);
-	pos = { HitDefense[2].x, HitDefense[2].y, HitDefense[2].z };
-	D3DXVec3TransformCoord(&m_wpos, &pos, &m_MatWork);
-	D3DXMatrixRotationY(&maty, (float)(90 / 180 * D3DX_PI));
-	worldMat = maty;
-	worldMat._11 = 0.4f;
-	worldMat._22 = 0.5f;
-	worldMat._41 = m_wpos.x;
-	worldMat._42 = m_wpos.y;
-	worldMat._43 = m_wpos.z;
-	for (int i = 0; i < 4; i++){
-		billboard_g[i].diffuse = D3DCOLOR_ARGB(100, 0, 255, 0);
-	}
-	buffer->Lock(0, 0, (void**)&p, 0);
-	{
-		memcpy(p, billboard_g, sizeof(Vertex) * 4);
-		buffer->Unlock();
-	}
-
-	// s—ñÝ’è
-	m_lpd3ddevice->SetTransform(D3DTS_WORLD, &worldMat);
-
-	// ”Âƒ|ƒŠ‚ð•`‰æ
-	m_lpd3ddevice->SetTexture(0, NULL);
-	m_lpd3ddevice->SetStreamSource(0, buffer, 0, sizeof(Vertex));
-	m_lpd3ddevice->SetFVF(VERTEX_FVF);
-	m_lpd3ddevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
-
-
-	D3DXMatrixIdentity(&worldMat);
-	pos = { HitDefense[6].x, HitDefense[6].y, HitDefense[6].z };
-	D3DXVec3TransformCoord(&m_wpos, &pos, &m_MatWork);
-	D3DXMatrixRotationY(&maty, (float)(90 / 180 * D3DX_PI));
-	worldMat = maty;
-	worldMat._11 = 0.2f;
-	worldMat._22 = 1.2f;
-	worldMat._41 = m_wpos.x;
-	worldMat._42 = m_wpos.y;
-	worldMat._43 = m_wpos.z;
-	for (int i = 0; i < 4; i++){
-		billboard[i].diffuse = D3DCOLOR_ARGB(100, 0, 255, 0);
-	}
-	g_buffer->Lock(0, 0, (void**)&p, 0);
-	{
-		memcpy(p, billboard, sizeof(Vertex) * 4);
-		g_buffer->Unlock();
-	}
-
-	// s—ñÝ’è
-	m_lpd3ddevice->SetTransform(D3DTS_WORLD, &worldMat);
-
-	// ”Âƒ|ƒŠ‚ð•`‰æ
-	m_lpd3ddevice->SetTexture(0, NULL);
-	m_lpd3ddevice->SetStreamSource(0, g_buffer, 0, sizeof(Vertex));
-	m_lpd3ddevice->SetFVF(VERTEX_FVF);
-	m_lpd3ddevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
-
-
-	D3DXMatrixIdentity(&worldMat);
-	pos = { HitDefense[11].x, HitDefense[11].y, HitDefense[11].z };
-	D3DXVec3TransformCoord(&m_wpos, &pos, &m_MatWork);
-	D3DXMatrixRotationY(&maty, (float)(90 / 180 * D3DX_PI));
-	worldMat = maty;
-	worldMat._11 = 0.2f;
-	worldMat._22 = 1.2f;
-	worldMat._41 = m_wpos.x;
-	worldMat._42 = m_wpos.y;
-	worldMat._43 = m_wpos.z;
-	for (int i = 0; i < 4; i++){
-		billboard[i].diffuse = D3DCOLOR_ARGB(100, 0, 255, 0);
-	}
-	g_buffer->Lock(0, 0, (void**)&p, 0);
-	{
-		memcpy(p, billboard, sizeof(Vertex) * 4);
-		g_buffer->Unlock();
-	}
-
-	// s—ñÝ’è
-	m_lpd3ddevice->SetTransform(D3DTS_WORLD, &worldMat);
-
-	// ”Âƒ|ƒŠ‚ð•`‰æ
-	m_lpd3ddevice->SetTexture(0, NULL);
-	m_lpd3ddevice->SetStreamSource(0, g_buffer, 0, sizeof(Vertex));
 	m_lpd3ddevice->SetFVF(VERTEX_FVF);
 	m_lpd3ddevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
 
