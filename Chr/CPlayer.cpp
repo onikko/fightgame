@@ -21,8 +21,7 @@ typedef struct {
 	bool loop_flag;
 }VMDDATA;
 VMDDATA g_vmddata[] = {
-	{ NULL, false },
-
+	{ "asset/motion/down.vmd", true },
 	{ "asset/motion/stand_1.vmd", true},
 	{ "asset/motion/walk_1.vmd" , true },
 	{ "asset/motion/‚’¼ƒWƒƒƒ“ƒv.vmd", true },
