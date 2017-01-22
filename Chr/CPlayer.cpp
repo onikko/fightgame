@@ -15,13 +15,12 @@ SmartPointer<CSkinMeshEffect> effect(new CSkinMeshEffect());
 string g_hit_attack_name[HIT_ATTACK_POS];
 string g_hit_defense_name[HIT_DEFENSE_POS];
 
-
 typedef struct {
 	LPCTSTR g_vmdname;
 	bool loop_flag;
 }VMDDATA;
 VMDDATA g_vmddata[] = {
-	{ "asset/motion/down.vmd", true },
+	{ "asset/motion/down.vmd", false },
 	{ "asset/motion/stand_1.vmd", true},
 	{ "asset/motion/walk_1.vmd" , true },
 	{ "asset/motion/垂直ジャンプ.vmd", true },
@@ -108,7 +107,8 @@ CPlayer::CPlayer(D3DXVECTOR3 angle, D3DXVECTOR3 translation, bool moveflag)
 	damege = 0.0f;
 	for (int i = 0; i<INPUT_COUNT; i++) m_nInput[i] = INPUT_NULL;
 	bool sts;
-	CGeneralFactory<PmxSkinMesh>::Instance().Create(0, 10, m_model);
+	//CGeneralFactory<PmxSkinMesh>::Instance().Create(0, 10, m_model);
+	m_model = new PmxSkinMesh();
 	m_model->SetDevice(m_lpd3ddevice);
 	sts = m_model->LoadModel("asset/model/sakuya/sakuya(kari).pmx", m_lpd3ddevice);
 	//sts = m_model->LoadModel("model/駆逐艦天津風1.1/天津風（艤装なし）.pmx", m_lpd3ddevice);
@@ -140,7 +140,8 @@ CPlayer::CPlayer(D3DXVECTOR3 angle, D3DXVECTOR3 translation, bool moveflag)
 	}
 
 	for (int i = 0; i < ANIM_MAX; i++){
-		CGeneralFactory<VmdMotionController>::Instance().Create(0, i, m_motion[i]);
+		//CGeneralFactory<VmdMotionController>::Instance().Create(0, i, m_motion[i]);
+		m_motion[i] = new VmdMotionController();
 		m_motion[i]->LoadVmdFile(g_vmddata[i].g_vmdname, m_model->GetBoneAddress(), m_model->GetIkAddress(), g_vmddata[i].loop_flag);
 	}
 	effect->LoadEffect("effect/skinmesh.fx");
@@ -152,8 +153,13 @@ CPlayer::CPlayer(D3DXVECTOR3 angle, D3DXVECTOR3 translation, bool moveflag)
 
 CPlayer::~CPlayer()
 {
+	SAFE_DELETE(m_model);
+	for (int i = 0; i < ANIM_MAX; i++){
+		SAFE_DELETE(m_motion[i]);
+	}
 	SAFE_DELETE(g_HitBall);
 	SAFE_DELETE(gauge);
+	printf("P1を破棄しました\n");
 }
 
 void CPlayer::Init()
@@ -247,6 +253,12 @@ void CPlayer::Input()
 			HitAttack[i].flag = true;
 		}
 	}
+
+	if (CInput::Instance().CheckKeyBufferTrigger(DIK_SPACE)){
+		RemoveObj(1, INT_MAX - 1);
+		AppendObj(new CTitle(), 1, true);
+	}
+
 }
 
 void CPlayer::Update()

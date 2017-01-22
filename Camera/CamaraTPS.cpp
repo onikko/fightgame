@@ -21,6 +21,7 @@ CCamaraTPS::CCamaraTPS()
 
 CCamaraTPS::~CCamaraTPS()
 {
+	printf("ƒJƒƒ‰‚ğ”jŠü‚µ‚Ü‚µ‚½\n");
 }
 
 void CCamaraTPS::SetViewport()

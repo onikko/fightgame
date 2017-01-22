@@ -8,8 +8,8 @@
 #include "../Utilities/CDebugFont.h"
 #include "../Utilities/Math.h"
 #include "../UI/UserInterface.h"
-#include "../UI/Gauge.h"
 #include "../DebugMgr.h"
+#include "../UI/Gauge.h"
 
 #define PLAYER_MOTION_MAX 10
 #define INPUT_COUNT 60
@@ -19,17 +19,17 @@
 class CPlayer : public CCharacterMng
 {	
 private:
-	CCamaraTPS* camera;
-	sp<PmxSkinMesh>			m_model;
-	sp<VmdMotionController> m_motion[PLAYER_MOTION_MAX];
-	CMath* m_math;
-	CGauge* gauge;
-	CDebugMgr* m_debug;
-	bool Reverse;
-	int m_nInput[INPUT_COUNT];
-	int m_jumpflag;
-	int m_motionflag;
-	int m_old_motionflag;
+	CCamaraTPS*				camera;
+	CDebugMgr*				m_debug;
+	PmxSkinMesh*			m_model;
+	VmdMotionController*	m_motion[PLAYER_MOTION_MAX];
+	CMath*					m_math;
+	CGauge*					gauge;
+	bool					Reverse;
+	int						m_nInput[INPUT_COUNT];
+	int						m_jumpflag;
+	int						m_motionflag;
+	int						m_old_motionflag;
 	bool m_moveflag;
 	int m_rigidity;
 	HIT HitDefense[HIT_DEFENSE_POS];

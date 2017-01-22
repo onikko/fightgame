@@ -3,13 +3,14 @@
 #include "../Utilities/CBoundingSphere.h"
 #include "../SkinMesh/SkinMesh.h"
 #include "../Factory.h"
-#include "../Camera/CamaraTPS.h"
 #include "../Utilities/Input.h"
 #include "../Utilities/CDebugFont.h"
 #include "../Utilities/Math.h"
 #include "../UI/UserInterface.h"
 #include "../UI/Gauge.h"
+#include "../Camera/CamaraTPS.h"
 #include "../DebugMgr.h"
+
 
 #define ENEMY_MOTION_MAX 10
 #define INPUT_COUNT 60
@@ -19,11 +20,11 @@ class CEnemy : public CEnemyBase
 {
 private:
 	CCamaraTPS* camera;
-	sp<PmxSkinMesh>			m_model;
-	sp<VmdMotionController> m_motion[ENEMY_MOTION_MAX];
+	CDebugMgr* m_debug;
+	PmxSkinMesh			*m_model;
+	VmdMotionController* m_motion[ENEMY_MOTION_MAX];
 	CMath* m_math;
 	CGauge* gauge;
-	CDebugMgr* m_debug;
 	bool Reverse;
 	int m_nInput[INPUT_COUNT];
 	int m_jumpflag;

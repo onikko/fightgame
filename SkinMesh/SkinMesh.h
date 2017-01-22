@@ -83,7 +83,8 @@ public:
 class PmxSkinMesh sealed : public SkinMesh {
 private:
 	//vector<PmxStruct::PMX_VERTEX> pmxvertex;
-	sp<VmdMotionController> m_spVmdMotionController;
+	//sp<VmdMotionController> m_spVmdMotionController;
+	VmdMotionController* m_spVmdMotionController;
 	vector<MmdStruct::PmdIkData> pmxIkData;
 	void LoadPmxfile(const LPCTSTR&, PmxStruct::PMX_DATA&);
 	void CreateMesh(PmxStruct::PMX_DATA&, string _src );
@@ -99,7 +100,11 @@ public:
 	/*vector<PmxStruct::PMX_VERTEX>* GetVertex(){
 		return &pmxvertex;
 	}*/
-	void SetMotion( sp<VmdMotionController> sp_motion){
+	/*void SetMotion( sp<VmdMotionController> sp_motion){
+		m_spVmdMotionController = sp_motion;
+	}*/
+
+	void SetMotion(VmdMotionController* sp_motion){
 		m_spVmdMotionController = sp_motion;
 	}
 	vector<MmdStruct::PmdIkData>* GetIkAddress( void ){

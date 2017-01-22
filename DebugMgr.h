@@ -1,10 +1,11 @@
 #pragma once
 #include "Utilities/GameObj.h"
 #include "Utilities/CDebugFont.h"
+#include "CBillBoard.h"
+
 #include "Chr/CPlayer.h"
 #include "Chr/Enemy.h"
 #include "Camera/CamaraTPS.h"
-#include "CBillBoard.h"
 
 #define DEBUG_PRIORITY 115000
 #define FPS_COUNT_X 5
@@ -12,14 +13,14 @@
 class CDebugMgr : public CGameObj
 {
 private:
+	CPlayer* player;
+	CEnemy* enemy;
+	CCamaraTPS* camera;
 	CDebugFont* m_font;
 	TCHAR time_font[50];
 	TCHAR str1[256];
 	TCHAR work_font[50];
 	RECT rc;
-	CPlayer* player;
-	CEnemy* enemy;
-	CCamaraTPS* camera;
 	CBillBoard BillBoard;
 	D3DXVECTOR3 vec3Trans;
 	LPDIRECT3DTEXTURE9 m_pd3dTex;

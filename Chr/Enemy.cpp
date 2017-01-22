@@ -2,7 +2,6 @@
 #include "../Utilities/SafeDelete.h"
 #include "../HitBox.h"
 #include "../Input_macro.h"
-
 #include "../LoadHitData.h"
 
 #define PLAYER_SPEED (0.02f)
@@ -12,7 +11,6 @@ SmartPointer<CSkinMeshEffect> g_effect(new CSkinMeshEffect());
 
 string hit_attack_name[HIT_ATTACK_POS];
 string hit_defense_name[HIT_DEFENSE_POS];
-
 
 typedef struct {
 	LPCTSTR g_vmdname;
@@ -66,7 +64,8 @@ CEnemy::CEnemy(D3DXVECTOR3 angle, D3DXVECTOR3 translation, bool moveflag)
 	Reverse = false;
 	for (int i = 0; i<INPUT_COUNT; i++) m_nInput[i] = INPUT_NULL;
 	bool sts;
-	CGeneralFactory<PmxSkinMesh>::Instance().Create(1, 10, m_model);
+	//CGeneralFactory<PmxSkinMesh>::Instance().Create(1, 10, m_model);
+	m_model = new PmxSkinMesh();
 	m_model->SetDevice(m_lpd3ddevice);
 	sts = m_model->LoadModel("asset/model/sakuya/sakuya.pmx", m_lpd3ddevice);
 	//sts = m_model->LoadModel("model/駆逐艦天津風1.1/天津風（艤装なし）.pmx", m_lpd3ddevice);
@@ -98,7 +97,8 @@ CEnemy::CEnemy(D3DXVECTOR3 angle, D3DXVECTOR3 translation, bool moveflag)
 	}
 
 	for (int i = 0; i < ANIM_MAX; i++){
-		CGeneralFactory<VmdMotionController>::Instance().Create(1, i, m_motion[i]);
+		//CGeneralFactory<VmdMotionController>::Instance().Create(1, i, m_motion[i]);
+		m_motion[i] = new VmdMotionController();
 		m_motion[i]->LoadVmdFile(vmddata[i].g_vmdname, m_model->GetBoneAddress(), m_model->GetIkAddress(), vmddata[i].loop_flag);
 	}
 	g_effect->LoadEffect("effect/skinmesh.fx");
@@ -110,8 +110,13 @@ CEnemy::CEnemy(D3DXVECTOR3 angle, D3DXVECTOR3 translation, bool moveflag)
 
 CEnemy::~CEnemy()
 {
+	SAFE_DELETE(m_model);
+	for (int i = 0; i < ANIM_MAX; i++){
+		SAFE_DELETE(m_motion[i]);
+	}
 	SAFE_DELETE(HitBall);
 	SAFE_DELETE(gauge);
+	printf("P2を破棄しました\n");
 }
 
 void CEnemy::Init()

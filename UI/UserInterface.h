@@ -1,9 +1,9 @@
 #pragma once
 
 #include "../Utilities/GameObj.h"
-#include "../Camera/CamaraTPS.h"
 #include "../CBillBoard.h"
 #include "../Utilities/CDebugFont.h"
+#include "../Camera/CamaraTPS.h"
 #include <time.h>
 
 #define GAUGE_PRIORITY 110000

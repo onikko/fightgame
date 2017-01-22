@@ -15,6 +15,7 @@ CBackground::CBackground(CDirect3DXFile* model)
 CBackground::~CBackground()
 {
 	SAFE_DELETE(m_stage);
+	printf("”wŒi‚ð”jŠü‚µ‚Ü‚µ‚½\n");
 }
 
 void CBackground::Init()

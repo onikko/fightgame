@@ -1,6 +1,7 @@
 #include "UserInterface.h"
 
 
+
 CUserInterface::CUserInterface()
 {
 	m_font = new CDebugFont(70);
@@ -23,6 +24,7 @@ CTime::CTime()
 CTime::~CTime()
 {
 	SAFE_RELEASE(m_pd3dTex);
+	printf("Time‚ð”jŠü‚µ‚Ü‚µ‚½\n");
 }
 
 void CTime::Init()

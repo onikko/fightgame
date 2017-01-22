@@ -13,10 +13,8 @@ using namespace std;
 class CGameObj;
 class CPlayer;
 class CEnemy;
-//class CGauge;
 class CCamaraTPS;
 class CDebugMgr;
-//class CCameraMng;
 
 #define NAME_SIZE 32
 struct ListData{

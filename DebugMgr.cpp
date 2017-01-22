@@ -37,6 +37,7 @@ CDebugMgr::~CDebugMgr()
 {
 	SAFE_RELEASE(m_pd3dTex);
 	SAFE_DELETE(m_font);
+	printf("Debug‚ð”jŠü‚µ‚Ü‚µ‚½\n");
 }
 
 void CDebugMgr::Init()
