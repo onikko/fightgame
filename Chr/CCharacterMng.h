@@ -32,15 +32,15 @@
 //	ANIM_MAX
 //};
 
-typedef struct{
-	float x, y, z;
-	D3DXMATRIX world;
-	float radius;
-	int id;
-	bool flag;
-}HIT;
+//typedef struct{
+//	float x, y, z;
+//	D3DXMATRIX world;
+//	float radius;
+//	int id;
+//	bool flag;
+//}HIT;
 
-class CCharacterMng : public CGameObj
+class CCharacterMng
 {
 public:
 	virtual D3DXMATRIX GetMatrixTotal() = 0;

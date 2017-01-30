@@ -32,8 +32,8 @@ private:
 	int m_old_motionflag;
 	bool m_moveflag;
 	int m_rigidity;
-	HIT g_HitDefense[HIT_DEFENSE_POS];
-	HIT g_HitAttack[HIT_ATTACK_POS];
+	//HIT g_HitDefense[HIT_DEFENSE_POS];
+	//HIT g_HitAttack[HIT_ATTACK_POS];
 public:
 	CEnemy(D3DXVECTOR3 angle, D3DXVECTOR3 translation, bool moveflag);
 	~CEnemy();
@@ -41,15 +41,14 @@ public:
 	D3DXMATRIX GetMatrixTotal(){ return m_MatTotal; }
 	D3DXMATRIX GetMatrixWorld(){ return m_MatWork; }
 	float GetRadius();
-	void Shoot();
 	void SetAngle(float x, float y, float z);
 	void SetTranslation(float x, float y, float z);
 	void InputJudge();
 	void CommandJudge();
 	void LoadData();
 	void MakeTotalMatrix();
-	HIT* GetDefenseData(){ return g_HitDefense; };
-	HIT* GetAttack(){ return g_HitAttack; };
+	//HIT* GetDefenseData(){ return g_HitDefense; };
+	//HIT* GetAttack(){ return g_HitAttack; };
 	D3DXVECTOR3 GetTranslation(){ return m_Translation; }
 	CGauge* GetGaugeData(){ return gauge; }
 protected:

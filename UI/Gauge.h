@@ -20,8 +20,5 @@ public:
 	void Damage(float v);
 	void Move();
 	void Draw();
-protected:
-	virtual void Update(){}
-	virtual void Render(){}
 };
 

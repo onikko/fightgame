@@ -11,6 +11,8 @@
 #include "../SimpleCamera.h"
 #include "../Adjust.h"
 
+#include "../Versus.h"
+
 typedef enum{
 	eMenu_Game,
 	eMenu_Config,
@@ -212,22 +214,22 @@ void CLoadStage::LoadThread(void *data)
 	temp.push_back(ld);
 	AppendItemBox("bg", ld.gameobj);
 
-	// プレイヤー
-	ld.gameobj = new CPlayer(D3DXVECTOR3(0, -90, 0), D3DXVECTOR3(-1.8f, 0, 0.), 0);
-	ld.autodelete = true;
-	strcpy_s(ld.name, 32, "player");
-	ld.priority = PLAYER_PRIORITY;
-	temp.push_back(ld);
-	AppendItemBox("player", ld.gameobj);
+	//// プレイヤー
+	//ld.gameobj = new CPlayer(D3DXVECTOR3(0, -90, 0), D3DXVECTOR3(-1.8f, 0, 0.), 0);
+	//ld.autodelete = true;
+	//strcpy_s(ld.name, 32, "player");
+	//ld.priority = PLAYER_PRIORITY;
+	//temp.push_back(ld);
+	//AppendItemBox("player", ld.gameobj);
 
 
-	// 敵
-	ld.gameobj = new CEnemy(D3DXVECTOR3(0, 90, 0), D3DXVECTOR3(1.8f, 0, 0.), 0);
-	ld.autodelete = true;
-	strcpy_s(ld.name, 32, "enemy");
-	ld.priority = ENEMY_PRIORITY;
-	temp.push_back(ld);
-	AppendItemBox("enemy", ld.gameobj);
+	//// 敵
+	//ld.gameobj = new CEnemy(D3DXVECTOR3(0, 90, 0), D3DXVECTOR3(1.8f, 0, 0.), 0);
+	//ld.autodelete = true;
+	//strcpy_s(ld.name, 32, "enemy");
+	//ld.priority = ENEMY_PRIORITY;
+	//temp.push_back(ld);
+	//AppendItemBox("enemy", ld.gameobj);
 
 	/*m_loadplayer1 = thread(&CLoadStage::LoadThreadPlayer1, data);
 	m_loadplayer2 = thread(&CLoadStage::LoadThreadPlayer2, data);
@@ -243,33 +245,26 @@ void CLoadStage::LoadThread(void *data)
 	temp.push_back(ld);
 	AppendItemBox("TPScamera", ld.gameobj);
 
-	//TCHAR str[256];
-	////ユーザーインターフェース
-	//for (int i = 0; i < 2; i++){
-	//	ld.gameobj = new CGauge(i);
-	//	ld.autodelete = true;
-	//	sprintf((char *)str, "Gauge%d", i + 1);
-	//	strcpy_s(ld.name, 32, str);
-	//	ld.priority = GAUGE_PRIORITY + i;
-	//	temp.push_back(ld);
-	//	AppendItemBox(str, ld.gameobj);
-	//	strcat((char *)str, "を読み込みました\n");
-	//	printf(str);
-	//}
+	ld.gameobj = new Versus();
+	ld.autodelete = true;
+	strcpy_s(ld.name, 32, "versus");
+	ld.priority = VERSUS_PRIORITY;
+	temp.push_back(ld);
+	AppendItemBox("versus", ld.gameobj);
 
-	ld.gameobj = new CHitCheck();
+	/*ld.gameobj = new CHitCheck();
 	ld.autodelete = true;
 	strcpy_s(ld.name, 32, "hitcheck");
 	ld.priority = HITCHECK_PRIORITY;
 	temp.push_back(ld);
-	AppendItemBox("hitcheck", ld.gameobj);
+	AppendItemBox("hitcheck", ld.gameobj);*/
 
-	ld.gameobj = new CAdjust();
+	/*ld.gameobj = new CAdjust();
 	ld.autodelete = true;
 	strcpy_s(ld.name, 32, "adjust");
 	ld.priority = ADJUST_PRIORITY;
 	temp.push_back(ld);
-	AppendItemBox("adjust", ld.gameobj);
+	AppendItemBox("adjust", ld.gameobj);*/
 
 
 	ld.gameobj = new CTime();
@@ -314,42 +309,4 @@ void CLoadTitle::LoadThread(void *data)
 	printf("カメラを読み込みました\n");
 
 	complete = true;
-}
-
-
-
-void CLoadStage::LoadThreadPlayer1(void *data){
-	mtx1.lock();
-	mtx2.lock();
-	ListData ld;
-
-	// プレイヤー
-	ld.gameobj = new CPlayer(D3DXVECTOR3(0, -90, 0), D3DXVECTOR3(-1.8f, 0, 0.), 0);
-	ld.autodelete = true;
-	strcpy_s(ld.name, 32, "player");
-	ld.priority = PLAYER_PRIORITY;
-
-	temp.push_back(ld);
-	AppendItemBox("player", ld.gameobj);
-	printf("P1を読み込みました\n");
-	mtx2.unlock();
-	mtx1.unlock();
-}
-
-void CLoadStage::LoadThreadPlayer2(void *data){
-	ListData ld;
-
-	// 敵
-	ld.gameobj = new CEnemy(D3DXVECTOR3(0, 180, 0), D3DXVECTOR3(1.8f, 0, 0.), 0);
-	ld.autodelete = true;
-	strcpy_s(ld.name, 32, "enemy");
-	ld.priority = ENEMY_PRIORITY;
-
-	mtx1.lock();
-	mtx2.lock();
-	temp.push_back(ld);
-	AppendItemBox("enemy", ld.gameobj);
-	printf("P2を読み込みました\n");
-	mtx2.unlock();
-	mtx1.unlock();
 }

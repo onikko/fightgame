@@ -39,6 +39,7 @@ public:
 	int IsFinished( void ){
 		return m_isfinished;
 	}
+	int GetTime(){ return time; }
 	void UpdateBoneMatrix();				// キーフレームデータを元にボーン行列を更新
 	void AdvanceTime();
 };

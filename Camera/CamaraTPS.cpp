@@ -42,8 +42,9 @@ void CCamaraTPS::SetCamera(){
 
 void CCamaraTPS::Init()
 {
-	player = (CPlayer*)FindItemBox("player");
-	enemy = (CEnemy*)FindItemBox("enemy");
+	/*player = (CPlayer*)FindItemBox("player");
+	enemy = (CEnemy*)FindItemBox("enemy");*/
+	versus = (Versus*)FindItemBox("versus");
 	m_Pos = { 0, 0, 0 };
 	m_Lookat = { 0, 0, 0 };
 	m_Up = { 0, 1, 0 };
@@ -102,12 +103,12 @@ void CCamaraTPS::Input()
 void CCamaraTPS::Update()
 {
 	// 調整の準備
-	D3DXMATRIX& m0 = player->GetMatrixWorld();
+	/*D3DXMATRIX& m0 = player->GetMatrixWorld();
 	D3DXMATRIX& m1 = enemy->GetMatrixWorld();
 	D3DXVECTOR3 p0 = D3DXVECTOR3(m0._41, 0, 0);
-	D3DXVECTOR3 p1 = D3DXVECTOR3(m1._41, 0, 0);
-	D3DXVECTOR3 center = (p0 + p1)*0.5f;
-	D3DXVECTOR3 unit = p0 - p1;
+	D3DXVECTOR3 p1 = D3DXVECTOR3(m1._41, 0, 0);*/
+	D3DXVECTOR3 center = versus->GetCenter();
+	D3DXVECTOR3 unit = versus->Get();
 	float dist = D3DXVec3Length(&unit);
 	D3DXVec3Normalize(&unit, &unit);
 
@@ -134,33 +135,33 @@ void CCamaraTPS::Update()
 			m_Up = D3DXVECTOR3(unit.z, 0, -unit.x);
 		}
 
-		//D3DXVECTOR3 TempPosition1;
-		//D3DXVECTOR3 TempPosition2;
+		D3DXVECTOR3 TempPosition1;
+		D3DXVECTOR3 TempPosition2;
 
-		//// 注視点はキャラクターモデルの座標から CAMERA_LOOK_AT_HEIGHT 分だけ高い位置
-		//m_Lookat.x = 0;
-		//m_Lookat.y = CAMERA_LOOK_AT_HEIGHT;
+		// 注視点はキャラクターモデルの座標から CAMERA_LOOK_AT_HEIGHT 分だけ高い位置
+		m_Lookat.x = 0;
+		m_Lookat.y = CAMERA_LOOK_AT_HEIGHT;
 
-		//// カメラの位置はカメラの水平角度と垂直角度から算出
+		// カメラの位置はカメラの水平角度と垂直角度から算出
 
-		//// 最初に垂直角度を反映した位置を算出
-		//m_SinParam = sin(m_CameraVAngle / 180.0f * D3DX_PI);
-		//m_CosParam = cos(m_CameraVAngle / 180.0f * D3DX_PI);
-		//TempPosition1.x = 0.0f;
-		//TempPosition1.y = m_SinParam * m_Camera_Distance;
-		//TempPosition1.z = -m_CosParam * m_Camera_Distance;
+		// 最初に垂直角度を反映した位置を算出
+		m_SinParam = sin(m_CameraVAngle / 180.0f * D3DX_PI);
+		m_CosParam = cos(m_CameraVAngle / 180.0f * D3DX_PI);
+		TempPosition1.x = 0.0f;
+		TempPosition1.y = m_SinParam * m_Camera_Distance;
+		TempPosition1.z = -m_CosParam * m_Camera_Distance;
 
-		//// 次に水平角度を反映した位置を算出
-		//m_SinParam = sin(m_CameraHAngle / 180.0f * D3DX_PI);
-		//m_CosParam = cos(m_CameraHAngle / 180.0f * D3DX_PI);
-		//TempPosition2.x = m_CosParam * TempPosition1.x - m_SinParam * TempPosition1.z;
-		//TempPosition2.y = TempPosition1.y;
-		//TempPosition2.z = m_SinParam * TempPosition1.x + m_CosParam * TempPosition1.z;
+		// 次に水平角度を反映した位置を算出
+		m_SinParam = sin(m_CameraHAngle / 180.0f * D3DX_PI);
+		m_CosParam = cos(m_CameraHAngle / 180.0f * D3DX_PI);
+		TempPosition2.x = m_CosParam * TempPosition1.x - m_SinParam * TempPosition1.z;
+		TempPosition2.y = TempPosition1.y;
+		TempPosition2.z = m_SinParam * TempPosition1.x + m_CosParam * TempPosition1.z;
 
-		//// 算出した座標に注視点の位置を加算したものがカメラの位置
-		//m_Pos.x = TempPosition2.x + m_Lookat.x;
-		//m_Pos.y = TempPosition2.y + m_Lookat.y;
-		//m_Pos.z = TempPosition2.z + m_Lookat.z;
+		// 算出した座標に注視点の位置を加算したものがカメラの位置
+		m_Pos.x = TempPosition2.x + m_Lookat.x;
+		m_Pos.y = TempPosition2.y + m_Lookat.y;
+		m_Pos.z = TempPosition2.z + m_Lookat.z;
 
 
 		D3DXMatrixLookAtLH(&m_MatView, &m_Pos, &m_Lookat, &m_Up);

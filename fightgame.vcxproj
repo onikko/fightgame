@@ -42,6 +42,7 @@
     <ClCompile Include="Utilities\GameObj.cpp" />
     <ClCompile Include="Utilities\Input.cpp" />
     <ClCompile Include="Utilities\Math.cpp" />
+    <ClCompile Include="Versus.cpp" />
     <ClCompile Include="Window\Application.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +94,7 @@
     <ClInclude Include="Utilities\Math.h" />
     <ClInclude Include="Utilities\SafeDelete.h" />
     <ClInclude Include="Utilities\SmartPointer.h" />
+    <ClInclude Include="Versus.h" />
     <ClInclude Include="Window\Application.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

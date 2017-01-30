@@ -32,8 +32,9 @@ typedef enum{
 	JUMP,
 	SMALL_PUNCH,
 	SMALL_KIKKU,
+	SAMPLE,
 	ANIM_MAX
-}ANIM_ID;
+}ANIM;
 
 struct MOTION {
 	int AnimIndex;
@@ -66,35 +67,35 @@ CEnemy::CEnemy(D3DXVECTOR3 angle, D3DXVECTOR3 translation, bool moveflag)
 	bool sts;
 	//CGeneralFactory<PmxSkinMesh>::Instance().Create(1, 10, m_model);
 	m_model = new PmxSkinMesh();
-	m_model->SetDevice(m_lpd3ddevice);
-	sts = m_model->LoadModel("asset/model/sakuya/sakuya.pmx", m_lpd3ddevice);
+	//m_model->SetDevice(m_lpd3ddevice);
+	//sts = m_model->LoadModel("asset/model/sakuya/sakuya.pmx", m_lpd3ddevice);
 	//sts = m_model->LoadModel("model/駆逐艦天津風1.1/天津風（艤装なし）.pmx", m_lpd3ddevice);
 	if (!sts){
-		MessageBox(m_hwnd, "ERROR!!", "load model", MB_OK);
+		MessageBox(NULL, "ERROR!!", "load model", MB_OK);
 		return;
 	}
 
 	//データロード
 	LoadData();
 
-	//当たり判定（防御）
-	for (int i = 0; i < HIT_DEFENSE_POS; i++){
-		g_HitDefense[i].id = m_model->GetBoneId(hit_defense_name[i]);
-		g_HitDefense[i].x = m_model->GetBoneAddress()->operator[](g_HitDefense[i].id).GetModelLocalPosition().x;
-		g_HitDefense[i].y = m_model->GetBoneAddress()->operator[](g_HitDefense[i].id).GetModelLocalPosition().y;
-		g_HitDefense[i].z = m_model->GetBoneAddress()->operator[](g_HitDefense[i].id).GetModelLocalPosition().z;
-		D3DXMatrixIdentity(&g_HitDefense[i].world);
-		g_HitDefense[i].flag = true;
-	}
-	//当たり判定（攻撃）
-	for (int i = 0; i < HIT_ATTACK_POS; i++){
-		g_HitAttack[i].id = m_model->GetBoneId(hit_attack_name[i]);
-		g_HitAttack[i].x = m_model->GetBoneAddress()->operator[](g_HitAttack[i].id).GetModelLocalPosition().x;
-		g_HitAttack[i].y = m_model->GetBoneAddress()->operator[](g_HitAttack[i].id).GetModelLocalPosition().y;
-		g_HitAttack[i].z = m_model->GetBoneAddress()->operator[](g_HitAttack[i].id).GetModelLocalPosition().z;
-		D3DXMatrixIdentity(&g_HitAttack[i].world);
-		g_HitAttack[i].flag = true;
-	}
+	////当たり判定（防御）
+	//for (int i = 0; i < HIT_DEFENSE_POS; i++){
+	//	g_HitDefense[i].id = m_model->GetBoneId(hit_defense_name[i]);
+	//	g_HitDefense[i].x = m_model->GetBoneAddress()->operator[](g_HitDefense[i].id).GetModelLocalPosition().x;
+	//	g_HitDefense[i].y = m_model->GetBoneAddress()->operator[](g_HitDefense[i].id).GetModelLocalPosition().y;
+	//	g_HitDefense[i].z = m_model->GetBoneAddress()->operator[](g_HitDefense[i].id).GetModelLocalPosition().z;
+	//	D3DXMatrixIdentity(&g_HitDefense[i].world);
+	//	g_HitDefense[i].flag = true;
+	//}
+	////当たり判定（攻撃）
+	//for (int i = 0; i < HIT_ATTACK_POS; i++){
+	//	g_HitAttack[i].id = m_model->GetBoneId(hit_attack_name[i]);
+	//	g_HitAttack[i].x = m_model->GetBoneAddress()->operator[](g_HitAttack[i].id).GetModelLocalPosition().x;
+	//	g_HitAttack[i].y = m_model->GetBoneAddress()->operator[](g_HitAttack[i].id).GetModelLocalPosition().y;
+	//	g_HitAttack[i].z = m_model->GetBoneAddress()->operator[](g_HitAttack[i].id).GetModelLocalPosition().z;
+	//	D3DXMatrixIdentity(&g_HitAttack[i].world);
+	//	g_HitAttack[i].flag = true;
+	//}
 
 	for (int i = 0; i < ANIM_MAX; i++){
 		//CGeneralFactory<VmdMotionController>::Instance().Create(1, i, m_motion[i]);
@@ -121,15 +122,15 @@ CEnemy::~CEnemy()
 
 void CEnemy::Init()
 {
-	camera = (CCamaraTPS*)FindItemBox("TPScamera");
+	//camera = (CCamaraTPS*)FindItemBox("TPScamera");
 	//gauge = (CGauge*)FindItemBox("Gauge2");
-	m_debug = (CDebugMgr*)FindItemBox("Debug");
+	//m_debug = (CDebugMgr*)FindItemBox("Debug");
 	D3DXMatrixIdentity(&m_MatTotal);
 	D3DXMatrixIdentity(&m_MatWork);
 	m_Speed = PLAYER_SPEED;
 	m_model->SetMotion(m_motion[STAND]);
 	m_model->SetTech(g_effect);
-	camera->GetViewMatrix();
+	//camera->GetViewMatrix();
 	MakeTotalMatrix();
 }
 
@@ -169,7 +170,7 @@ void CEnemy::Input()
 	if (CInput::Instance().CheckKeyBufferTrigger(DIK_F4)){
 		LoadData();
 	}
-	if (CInput::Instance().CheckKeyBufferTrigger(DIK_F5)){
+	/*if (CInput::Instance().CheckKeyBufferTrigger(DIK_F5)){
 		for (int i = 0; i < HIT_DEFENSE_POS; i++){
 			g_HitDefense[i].flag = false;
 		}
@@ -184,12 +185,12 @@ void CEnemy::Input()
 		for (int i = 0; i < HIT_ATTACK_POS; i++){
 			g_HitAttack[i].flag = true;
 		}
-	}
+	}*/
 }
 
 void CEnemy::Update()
 {
-	if (!m_UpdateFlag) return;
+	//if (!m_UpdateFlag) return;
 	if (m_rigidity != 0){
 		m_Speed = 0.0f;
 	}
@@ -232,26 +233,26 @@ void CEnemy::Update()
 	//ボーンを更新する
 	m_motion[m_motionflag]->UpdateBoneMatrix();
 	D3DXVECTOR3 pos;
-	//当たり判定（防御）
-	for (int i = 0; i < HIT_DEFENSE_POS; i++){
-		if (g_HitDefense[i].flag){
-			g_HitDefense[i].x = m_model->GetBoneAddress()->operator[](g_HitDefense[i].id).GetModelLocalPosition().x;
-			g_HitDefense[i].y = m_model->GetBoneAddress()->operator[](g_HitDefense[i].id).GetModelLocalPosition().y;
-			g_HitDefense[i].z = m_model->GetBoneAddress()->operator[](g_HitDefense[i].id).GetModelLocalPosition().z;
-			pos = { g_HitDefense[i].x, g_HitDefense[i].y, g_HitDefense[i].z };
-			HitBall->Update(g_HitDefense[i].world, m_MatWork, pos, g_HitDefense[i].radius);
-		}
-	}
-	//当たり判定（攻撃）
-	for (int i = 0; i < HIT_ATTACK_POS; i++){
-		if (g_HitAttack[i].flag){
-			g_HitAttack[i].x = m_model->GetBoneAddress()->operator[](g_HitAttack[i].id).GetModelLocalPosition().x;
-			g_HitAttack[i].y = m_model->GetBoneAddress()->operator[](g_HitAttack[i].id).GetModelLocalPosition().y;
-			g_HitAttack[i].z = m_model->GetBoneAddress()->operator[](g_HitAttack[i].id).GetModelLocalPosition().z;
-			pos = { g_HitAttack[i].x, g_HitAttack[i].y, g_HitAttack[i].z };
-			HitBall->Update(g_HitAttack[i].world, m_MatWork, pos, g_HitAttack[i].radius);
-		}
-	}
+	////当たり判定（防御）
+	//for (int i = 0; i < HIT_DEFENSE_POS; i++){
+	//	if (g_HitDefense[i].flag){
+	//		g_HitDefense[i].x = m_model->GetBoneAddress()->operator[](g_HitDefense[i].id).GetModelLocalPosition().x;
+	//		g_HitDefense[i].y = m_model->GetBoneAddress()->operator[](g_HitDefense[i].id).GetModelLocalPosition().y;
+	//		g_HitDefense[i].z = m_model->GetBoneAddress()->operator[](g_HitDefense[i].id).GetModelLocalPosition().z;
+	//		pos = { g_HitDefense[i].x, g_HitDefense[i].y, g_HitDefense[i].z };
+	//		HitBall->Update(g_HitDefense[i].world, m_MatWork, pos, g_HitDefense[i].radius);
+	//	}
+	//}
+	////当たり判定（攻撃）
+	//for (int i = 0; i < HIT_ATTACK_POS; i++){
+	//	if (g_HitAttack[i].flag){
+	//		g_HitAttack[i].x = m_model->GetBoneAddress()->operator[](g_HitAttack[i].id).GetModelLocalPosition().x;
+	//		g_HitAttack[i].y = m_model->GetBoneAddress()->operator[](g_HitAttack[i].id).GetModelLocalPosition().y;
+	//		g_HitAttack[i].z = m_model->GetBoneAddress()->operator[](g_HitAttack[i].id).GetModelLocalPosition().z;
+	//		pos = { g_HitAttack[i].x, g_HitAttack[i].y, g_HitAttack[i].z };
+	//		HitBall->Update(g_HitAttack[i].world, m_MatWork, pos, g_HitAttack[i].radius);
+	//	}
+	//}
 
 	gauge->Move();
 	if (gauge->Value <= 0 && gauge->PrevValue <= 0) {
@@ -263,42 +264,35 @@ void CEnemy::Render()
 {
 
 	D3DLIGHT9 light;
-	m_lpd3ddevice->SetTransform(D3DTS_WORLD, &m_MatWork);
+	//m_lpd3ddevice->SetTransform(D3DTS_WORLD, &m_MatWork);
 	m_model->Draw(m_MatWork, &light, camera->GetViewMatrix(), camera->GetProjectionMatrix());
 
-	//当たり判定（防御）
-	for (int i = 0; i < HIT_DEFENSE_POS; i++){
-		if (g_HitDefense[i].flag){
-			HitBall->SetColor(D3DXCOLOR(0, 0, 1, 0.4f), D3DXCOLOR(0, 0, 0, 0));
-			HitBall->Draw(g_HitDefense[i].world);
-		}
-	}
-	//当たり判定（攻撃）
-	for (int i = 0; i < HIT_ATTACK_POS; i++){
-		if (g_HitAttack[i].flag){
-			HitBall->SetColor(D3DXCOLOR(1, 0, 0, 0.4f), D3DXCOLOR(0, 0, 0, 0));
-			HitBall->Draw(g_HitAttack[i].world);
-		}
-	}
+	////当たり判定（防御）
+	//for (int i = 0; i < HIT_DEFENSE_POS; i++){
+	//	if (g_HitDefense[i].flag){
+	//		HitBall->SetColor(D3DXCOLOR(0, 0, 1, 0.4f), D3DXCOLOR(0, 0, 0, 0));
+	//		HitBall->Draw(g_HitDefense[i].world);
+	//	}
+	//}
+	////当たり判定（攻撃）
+	//for (int i = 0; i < HIT_ATTACK_POS; i++){
+	//	if (g_HitAttack[i].flag){
+	//		HitBall->SetColor(D3DXCOLOR(1, 0, 0, 0.4f), D3DXCOLOR(0, 0, 0, 0));
+	//		HitBall->Draw(g_HitAttack[i].world);
+	//	}
+	//}
 	gauge->Draw();
 }
 
 float CEnemy::GetRadius()
 {
-	return g_HitDefense[g_HitDefense[0].id].radius;
-}
-
-void CEnemy::Shoot()
-{
-	AppendObj(new CPlayerBullet(m_MatWork,
-		m_model->GetBone()[g_HitDefense[0].id].GetModelLocalPosition().x,
-		m_model->GetBone()[g_HitDefense[0].id].GetModelLocalPosition().y,
-		m_model->GetBone()[g_HitDefense[0].id].GetModelLocalPosition().z), BULLET_PRIORITY, true);
+	//return g_HitDefense[g_HitDefense[0].id].radius;
+	return false;
 }
 
 void CEnemy::LoadData()
 {
-	CLoadHitData* LoadDefense = new CLoadHitData("defense.txt");
+	/*CLoadHitData* LoadDefense = new CLoadHitData("defense.txt");
 	for (int i = 0; i < HIT_DEFENSE_POS; i++){
 		hit_defense_name[i] = LoadDefense->LoadName();
 		g_HitDefense[i].radius = LoadDefense->LoadRadius();
@@ -311,7 +305,7 @@ void CEnemy::LoadData()
 		LoadAttack->Reset();
 	}
 	SAFE_DELETE(LoadAttack);
-	SAFE_DELETE(LoadDefense);
+	SAFE_DELETE(LoadDefense);*/
 }
 
 //入力検知

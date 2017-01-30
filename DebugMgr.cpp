@@ -42,8 +42,8 @@ CDebugMgr::~CDebugMgr()
 
 void CDebugMgr::Init()
 {
-	player = (CPlayer*)FindItemBox("player");
-	enemy = (CEnemy*)FindItemBox("enemy");
+	/*player = (CPlayer*)FindItemBox("player");
+	enemy = (CEnemy*)FindItemBox("enemy");*/
 	camera = (CCamaraTPS*)FindItemBox("TPScamera");
 	for (int i = 0; i < MAX_INPUT_FONT; i++){
 		sprintf((char *)input_data[i].data, "");
@@ -136,15 +136,15 @@ void CDebugMgr::Render()
 	SetRect(&rc, FPS_COUNT_X, FPS_COUNT_Y, 0, 0);
 	m_font->Draw(time_font, -1, &rc, D3DCOLOR_ARGB(255, 0, 0, 0));
 
-	//P1位置
-	sprintf((char *)str1, "P1の現在位置：%.3f,%.3f,%.3f", player->GetMatrixWorld()._41, player->GetMatrixWorld()._42, player->GetMatrixWorld()._43);
-	SetRect(&rc, P1_POS_X, P1_POS_Y, 0, 0);
-	m_font->Draw(str1, -1, &rc, D3DCOLOR_ARGB(255, 0, 0, 0));
+	////P1位置
+	//sprintf((char *)str1, "P1の現在位置：%.3f,%.3f,%.3f", player->GetMatrixWorld()._41, player->GetMatrixWorld()._42, player->GetMatrixWorld()._43);
+	//SetRect(&rc, P1_POS_X, P1_POS_Y, 0, 0);
+	//m_font->Draw(str1, -1, &rc, D3DCOLOR_ARGB(255, 0, 0, 0));
 
-	//P2位置
-	sprintf((char *)str1, "P2の現在位置：%.3f,%.3f,%.3f", enemy->GetMatrixWorld()._41, enemy->GetMatrixWorld()._42, enemy->GetMatrixWorld()._43);
-	SetRect(&rc, P2_POS_X, P2_POS_Y, 0, 0);
-	m_font->Draw(str1, -1, &rc, D3DCOLOR_ARGB(255, 0, 0, 0));
+	////P2位置
+	//sprintf((char *)str1, "P2の現在位置：%.3f,%.3f,%.3f", enemy->GetMatrixWorld()._41, enemy->GetMatrixWorld()._42, enemy->GetMatrixWorld()._43);
+	//SetRect(&rc, P2_POS_X, P2_POS_Y, 0, 0);
+	//m_font->Draw(str1, -1, &rc, D3DCOLOR_ARGB(255, 0, 0, 0));
 
 }
 

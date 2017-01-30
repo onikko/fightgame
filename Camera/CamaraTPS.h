@@ -3,12 +3,15 @@
 #include "../Chr/CPlayer.h"
 #include "../Chr/Enemy.h"
 
+#include "../Versus.h"
+
 #define CAMERA_PRIORITY 80000
 class CCamaraTPS : public CCameraMng
 {
 private:
-	CPlayer* player;
-	CEnemy* enemy;
+	/*CPlayer* player;
+	CEnemy* enemy;*/
+	Versus* versus;
 	D3DXVECTOR3 m_Pos;	//ˆÊ’u
 	D3DXVECTOR3 m_Lookat;	// ’‹“_
 	D3DXVECTOR3 m_Up;		// ãŒü‚«

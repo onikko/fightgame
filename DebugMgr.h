@@ -13,8 +13,8 @@
 class CDebugMgr : public CGameObj
 {
 private:
-	CPlayer* player;
-	CEnemy* enemy;
+	/*CPlayer* player;
+	CEnemy* enemy;*/
 	CCamaraTPS* camera;
 	CDebugFont* m_font;
 	TCHAR time_font[50];
