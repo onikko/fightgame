@@ -13,17 +13,17 @@
 
 bool CGame::GameInit(HINSTANCE hinst, HWND hwnd, int width, int height, bool fullscreen)
 {
-	bool sts = CGameObj::Instance().Initialize(hwnd, hinst, fullscreen, width, height);
+	bool sts = GAME.Initialize(hwnd, hinst, fullscreen, width, height);
 
 	if (!sts){
 		MessageBox(hwnd, "ERROR!!", "DirectX 初期化エラー", MB_OK);
 		return false;
 	}
-	CInput::Instance().Init(hinst, hwnd);
+	INPUT.Init(hinst, hwnd);
 
-	CGameObj::Instance().AppendObj(new CBiginRender(), 0, true);
-	CGameObj::Instance().AppendObj(new CEndRender(), INT_MAX, true);
-	CGameObj::Instance().AppendObj(new CTitle(), 1, true);
+	GAME.AppendObj(new CBiginRender(), 0, true);
+	GAME.AppendObj(new CEndRender(), INT_MAX, true);
+	GAME.AppendObj(new CTitle(), 1, true);
 
 
 	if (FAILED(sts)) MessageBox(hwnd, "ERROR!!", "読み込みエラー", MB_OK);
@@ -54,16 +54,16 @@ void CGame::GameMain()
 			}
 			continue;
 		}
-		CInput::Instance().GetKeyBuffer();
-		CGameObj::Instance().DoInputTasks();
-		CGameObj::Instance().DoUpdateTasks();
-		CGameObj::Instance().DoRenderTasks();
+		INPUT.GetKeyBuffer();
+		GAME.DoInputTasks();
+		GAME.DoUpdateTasks();
+		GAME.DoRenderTasks();
 	}
 }
 
 void CGame::GameExit()
 {
-	CGameObj g_DXGrobj = CGameObj::Instance();
+	CGameObj g_DXGrobj = GAME;
 
 	m_gamemainthread.join();					// ゲームメインスレッドの終了を待つ
 

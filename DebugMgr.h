@@ -3,8 +3,6 @@
 #include "Utilities/CDebugFont.h"
 #include "CBillBoard.h"
 
-#include "Chr/CPlayer.h"
-#include "Chr/Enemy.h"
 #include "Camera/CamaraTPS.h"
 
 #define DEBUG_PRIORITY 115000
@@ -13,8 +11,6 @@
 class CDebugMgr : public CGameObj
 {
 private:
-	/*CPlayer* player;
-	CEnemy* enemy;*/
 	CCamaraTPS* camera;
 	CDebugFont* m_font;
 	TCHAR time_font[50];

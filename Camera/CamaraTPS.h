@@ -1,7 +1,5 @@
 #pragma once
 #include "CCameraMng.h"
-#include "../Chr/CPlayer.h"
-#include "../Chr/Enemy.h"
 
 #include "../Versus.h"
 
@@ -9,8 +7,6 @@
 class CCamaraTPS : public CCameraMng
 {
 private:
-	/*CPlayer* player;
-	CEnemy* enemy;*/
 	Versus* versus;
 	D3DXVECTOR3 m_Pos;	//à íu
 	D3DXVECTOR3 m_Lookat;	// íçéãì_

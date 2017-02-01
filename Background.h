@@ -2,7 +2,6 @@
 #include "Utilities/GameObj.h"
 #include "Utilities/CDirect3DXFile.h"
 #include "SkinMesh/SkinMesh.h"
-#include "Chr/CPlayer.h"
 #include "Camera/CamaraTPS.h"
 
 

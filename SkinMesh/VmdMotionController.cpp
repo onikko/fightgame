@@ -131,7 +131,7 @@ void VmdMotionController::UpdateBoneMatrix() {
 		D3DXMatrixRotationQuaternion(&rot, &boneRot[i]);
 		D3DXMatrixTranslation(&trans, bonePos[i].x, bonePos[i].y, bonePos[i].z);
 
-		(*bones)[i].boneMat = rot*trans*(*bones)[i].initMat;		
+		(*bones)[i].boneMat = rot*trans*(*bones)[i].initMat;
 		// IK影響下のボーンも含めてリセットする → 動きが不連続的になりやすい
 		//if ((*bones)[i].type != 4) (*bones)[i].boneMat = rot*trans*(*bones)[i].initMat;	// IK影響下のボーンをリセットしない → 動きが連続的になるが時間と共にねじれていく
 	}

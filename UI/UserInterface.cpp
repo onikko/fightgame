@@ -1,7 +1,6 @@
 #include "UserInterface.h"
 
 
-
 CUserInterface::CUserInterface()
 {
 	m_font = new CDebugFont(70);
@@ -44,7 +43,10 @@ void CTime::Update()
 		m_cnt = 0;
 		old_time = now_time;
 	}
-	if (m_time < 0)	m_time = 0;
+	if (m_time < 0){
+		m_time = 0;
+		m_GameEndFlag = true;
+	}
 	one = (m_time / 1) % 10;
 	ten = (m_time / 10) % 10;
 }

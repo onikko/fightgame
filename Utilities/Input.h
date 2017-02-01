@@ -65,3 +65,5 @@ public:
 	BOOL CALLBACK EnumJoysticksCallback(
 		const DIDEVICEINSTANCE* did);
 };
+
+#define INPUT CInput::Instance()

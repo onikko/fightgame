@@ -246,7 +246,7 @@ void MmdSkinMesh::CreateMesh(vector<MmdStruct::PmdVertex> pmdVertices, vector<un
 		{0, 44, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
 		D3DDECL_END()
 	};
-	unsigned int numFace = pmdFaces.size()/3;
+	unsigned int numFace = pmdFaces.size() / 3;
 	unsigned int numVertex = pmdVertices.size();
 	D3DXCreateMesh(numFace, numVertex, D3DXMESH_MANAGED, declAry, pDevice, &pOrgMesh);
 	// 頂点データ収納
@@ -281,7 +281,7 @@ void MmdSkinMesh::CreateMesh(vector<MmdStruct::PmdVertex> pmdVertices, vector<un
 		D3DMATERIAL9 material = {0};
 		CopyMaterial(material, pmdMaterials[i]);
 		material_end += pmdMaterials[i].face_vert_count;
-		for (; j < material_end; ++j) material_number[j/3] = i;
+		for (; j < material_end; ++j) material_number[j / 3] = i;
 		materials.push_back(material);
 		// テクスチャ
 		char tex[21] = {0};	// ファイル名が20byteのときのために最後に0を追加

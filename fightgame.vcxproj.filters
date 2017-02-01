@@ -81,15 +81,6 @@
     <ClCompile Include="DrawOrder\CGraphicsMeshBone.cpp">
       <Filter>DrawOrder</Filter>
     </ClCompile>
-    <ClCompile Include="Chr\CPlayer.cpp">
-      <Filter>Character</Filter>
-    </ClCompile>
-    <ClCompile Include="Chr\Enemy.cpp">
-      <Filter>Character</Filter>
-    </ClCompile>
-    <ClCompile Include="Chr\EnemyBase.cpp">
-      <Filter>Character</Filter>
-    </ClCompile>
     <ClCompile Include="Camera\CCameraMng.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
@@ -103,9 +94,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="HitCheck.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="HitBox.cpp">
@@ -135,10 +123,10 @@
     <ClCompile Include="SimpleCamera.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Adjust.cpp">
+    <ClCompile Include="Versus.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Versus.cpp">
+    <ClCompile Include="Rand.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -227,15 +215,6 @@
     <ClInclude Include="Chr\CCharacterMng.h">
       <Filter>Character</Filter>
     </ClInclude>
-    <ClInclude Include="Chr\CPlayer.h">
-      <Filter>Character</Filter>
-    </ClInclude>
-    <ClInclude Include="Chr\Enemy.h">
-      <Filter>Character</Filter>
-    </ClInclude>
-    <ClInclude Include="Chr\EnemyBase.h">
-      <Filter>Character</Filter>
-    </ClInclude>
     <ClInclude Include="Camera\CamaraTPS.h">
       <Filter>Camera</Filter>
     </ClInclude>
@@ -263,9 +242,6 @@
     <ClInclude Include="Input_macro.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="HitCheck.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="HitBox.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -287,10 +263,10 @@
     <ClInclude Include="SimpleCamera.h">
       <Filter>Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Adjust.h">
+    <ClInclude Include="Versus.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Versus.h">
+    <ClInclude Include="Rand.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

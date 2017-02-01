@@ -11,8 +11,6 @@
 
 using namespace std;
 class CGameObj;
-class CPlayer;
-//class CEnemy;
 class CCamaraTPS;
 class CDebugMgr;
 class Versus;
@@ -86,6 +84,7 @@ protected:
 	static bool							m_PrevInput;
 	static bool							m_UpdateFlag;
 	static bool							m_TopView;
+	static bool							m_GameEndFlag;
 	virtual void	Init(){}
 	virtual void	Input(){}
 	virtual void	Update(){}
@@ -99,3 +98,5 @@ protected:
 #define COL_DGRAY D3DCOLOR_ARGB(255, 64, 64, 64)
 #define COL_BLACK D3DCOLOR_ARGB(255, 0, 0, 0)
 #define COL_SHADE D3DCOLOR_ARGB(128, 0, 0, 0)
+
+#define GAME CGameObj::Instance() 

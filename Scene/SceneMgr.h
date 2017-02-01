@@ -14,7 +14,7 @@ public:
 class CTitle : public CGameObj
 {
 private:
-	CDebugFont m_font;
+	CDebugFont* m_font;
 	CBillBoard billboard;
 	CSimpleCamera* camera;
 	D3DXMATRIX a;

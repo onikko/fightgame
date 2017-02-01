@@ -1,16 +1,11 @@
 #include "SceneMgr.h"
 #include "../DebugMgr.h"
-#include "../Chr/CPlayer.h"
-#include "../Chr/Enemy.h"
 #include "../Background.h"
 #include "../UI/UserInterface.h"
 #include "../Camera/CamaraTPS.h"
 #include "../Utilities/CDebugFont.h"
 #include "../Utilities/Input.h"
-#include "../HitCheck.h"
 #include "../SimpleCamera.h"
-#include "../Adjust.h"
-
 #include "../Versus.h"
 
 typedef enum{
@@ -34,17 +29,19 @@ CSceneMgr::~CSceneMgr()
 CTitle::CTitle()
 {
 	AppendObj(new CLoadTitle(), 2, true);
+	m_font = new CDebugFont();
+	m_font->CreateFont(25);
 	D3DXCreateTextureFromFile(m_lpd3ddevice, "asset/images/title.png", &m_pd3dTex);
 }
 
 CTitle::~CTitle()
 {
 	SAFE_RELEASE(m_pd3dTex);
+	SAFE_DELETE(m_font);
 }
 
 void CTitle::Init()
 {
-	m_font.CreateFont(25);
 	camera = (CSimpleCamera*)FindItemBox("Camera");
 	billboard.SetPosition(0, 0, 0);
 	billboard.SetColor(D3DCOLOR_ARGB(255, 255, 0, 0));
@@ -54,13 +51,13 @@ void CTitle::Init()
 
 void CTitle::Input()
 {
-	if (CInput::Instance().CheckKeyBufferTrigger(DIK_W)){
+	if (INPUT.CheckKeyBufferTrigger(DIK_W)){
 		Now_Select = (Now_Select + 1) % eMenu_Num;
 	}
-	if (CInput::Instance().CheckKeyBufferTrigger(DIK_S)){
+	if (INPUT.CheckKeyBufferTrigger(DIK_S)){
 		Now_Select = (Now_Select + (eMenu_Num - 1)) % eMenu_Num;
 	}
-	if (CInput::Instance().CheckKeyBufferTrigger(DIK_SPACE)){
+	if (INPUT.CheckKeyBufferTrigger(DIK_SPACE)){
 		switch (Now_Select)
 		{
 		case eMenu_Game:
@@ -85,9 +82,9 @@ void CTitle::Render()
 	RECT rc;
 	title();
 	SetRect(&rc, (int)x, (int)GAME_FONT, 0, 0);
-	m_font.Draw("ÉQÅ[ÉÄ", -1, &rc, D3DCOLOR_ARGB(255, 0, 0, 0));
+	m_font->Draw("ÉQÅ[ÉÄ", -1, &rc, D3DCOLOR_ARGB(255, 0, 0, 0));
 	SetRect(&rc, (int)x, (int)CONFIG_FONT, 0, 0);
-	m_font.Draw("ê›íË", -1, &rc, D3DCOLOR_ARGB(255, 0, 0, 0));
+	m_font->Draw("ê›íË", -1, &rc, D3DCOLOR_ARGB(255, 0, 0, 0));
 	float y = 0;
 	switch (Now_Select)
 	{
@@ -99,7 +96,7 @@ void CTitle::Render()
 		break;
 	}
 	SetRect(&rc, (int)x - 50, (int)y, 0, 0);
-	m_font.Draw("Å®", -1, &rc, D3DCOLOR_ARGB(255, 0, 0, 0));
+	m_font->Draw("Å®", -1, &rc, D3DCOLOR_ARGB(255, 0, 0, 0));
 }
 
 void CTitle::title(){
@@ -213,23 +210,6 @@ void CLoadStage::LoadThread(void *data)
 	ld.priority = BACKGROUND_PRIORITY;
 	temp.push_back(ld);
 	AppendItemBox("bg", ld.gameobj);
-
-	//// ÉvÉåÉCÉÑÅ[
-	//ld.gameobj = new CPlayer(D3DXVECTOR3(0, -90, 0), D3DXVECTOR3(-1.8f, 0, 0.), 0);
-	//ld.autodelete = true;
-	//strcpy_s(ld.name, 32, "player");
-	//ld.priority = PLAYER_PRIORITY;
-	//temp.push_back(ld);
-	//AppendItemBox("player", ld.gameobj);
-
-
-	//// ìG
-	//ld.gameobj = new CEnemy(D3DXVECTOR3(0, 90, 0), D3DXVECTOR3(1.8f, 0, 0.), 0);
-	//ld.autodelete = true;
-	//strcpy_s(ld.name, 32, "enemy");
-	//ld.priority = ENEMY_PRIORITY;
-	//temp.push_back(ld);
-	//AppendItemBox("enemy", ld.gameobj);
 
 	/*m_loadplayer1 = thread(&CLoadStage::LoadThreadPlayer1, data);
 	m_loadplayer2 = thread(&CLoadStage::LoadThreadPlayer2, data);

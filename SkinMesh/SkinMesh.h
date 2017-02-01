@@ -25,7 +25,6 @@ protected:
 	vector<Bone>* es;
 	vector<ID3DXMesh*> boneObj;			// 表示用ボーン
 	virtual void CreateBoneObj();													// 表示用ボーンを作成
-	virtual vector<D3DXMATRIX> GetWorlds(const D3DXMATRIX* world);					// ボーン行列から変換したワールド変換行列の配列を取得
 	/// シェーダ ///
 	sp<CSkinMeshEffect> m_effect;
 	void CreateShader();	// シェーダの作成
@@ -34,6 +33,7 @@ protected:
 public:
 	virtual ~SkinMesh();
 	virtual void AdvanceTime() = 0;						// 時間をすすめる
+	virtual vector<D3DXMATRIX> GetWorlds(const D3DXMATRIX* world);					// ボーン行列から変換したワールド変換行列の配列を取得
 	vector<Bone>* GetBoneAddress( void ){
 		return &bones;
 	}

@@ -16,6 +16,7 @@ bool					CGameObj::m_Paused = false;
 bool					CGameObj::m_PrevInput = false;
 bool					CGameObj::m_UpdateFlag = true;
 bool					CGameObj::m_TopView = false;
+bool					CGameObj::m_GameEndFlag = false;
 
 list<ListData> CGameObj::objlist;
 bool CGameObj::it_move = NULL;

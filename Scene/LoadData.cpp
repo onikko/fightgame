@@ -33,7 +33,7 @@ CLoadData::~CLoadData()
 	m_loadthread.joinable();
 	thread_guard tg(m_loadthread);
 	//m_loadthread.joinable();
-	if (m_font) delete m_font;
+	SAFE_DELETE(m_font);
 	// 中断されたのであれば、追加予定だったオブジェクトを破棄する
 	if (complete == false){
 		list<ListData>::iterator i = temp.begin();
@@ -95,7 +95,7 @@ void CLoadData::Render()
 			CGameObj::Instance().AppendObj(*i);
 		}
 		// 自分自身は用済みなので破棄
-		CGameObj::Instance().RemoveObj(this);
+		GAME.RemoveObj(this);
 	}
 }
 

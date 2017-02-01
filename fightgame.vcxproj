@@ -11,21 +11,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Adjust.cpp" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="Camera\CamaraTPS.cpp" />
     <ClCompile Include="Camera\CCameraMng.cpp" />
     <ClCompile Include="CBillBoard.cpp" />
-    <ClCompile Include="Chr\CPlayer.cpp" />
-    <ClCompile Include="Chr\Enemy.cpp" />
-    <ClCompile Include="Chr\EnemyBase.cpp" />
     <ClCompile Include="DebugMgr.cpp" />
     <ClCompile Include="DrawOrder\CGraphicsMeshBone.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="HitBox.cpp" />
-    <ClCompile Include="HitCheck.cpp" />
     <ClCompile Include="LoadHitData.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Rand.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="Scene\LoadData.cpp" />
     <ClCompile Include="Scene\SceneMgr.cpp" />
@@ -46,16 +42,12 @@
     <ClCompile Include="Window\Application.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Adjust.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="Camera\CamaraTPS.h" />
     <ClInclude Include="Camera\CCameraMng.h" />
     <ClInclude Include="CBillBoard.h" />
     <ClInclude Include="CEffect.h" />
     <ClInclude Include="Chr\CCharacterMng.h" />
-    <ClInclude Include="Chr\CPlayer.h" />
-    <ClInclude Include="Chr\Enemy.h" />
-    <ClInclude Include="Chr\EnemyBase.h" />
     <ClInclude Include="DebugMgr.h" />
     <ClInclude Include="DrawOrder\CGraphicsDrawList.h" />
     <ClInclude Include="DrawOrder\CGraphicsMeshBone.h" />
@@ -66,9 +58,9 @@
     <ClInclude Include="Factory\FactoryBase.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="HitBox.h" />
-    <ClInclude Include="HitCheck.h" />
     <ClInclude Include="Input_macro.h" />
     <ClInclude Include="LoadHitData.h" />
+    <ClInclude Include="Rand.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="Scene\LoadData.h" />
     <ClInclude Include="Scene\SceneMgr.h" />
