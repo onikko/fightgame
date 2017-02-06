@@ -8,11 +8,11 @@
 #include "Input_macro.h"
 #include "HitBox.h"
 #include "UI/Gauge.h"
-
+#include"Utilities/CDebugFont.h"
 
 // 当たり判定
 struct HIT {
-	char* BoneName;
+	string BoneName;
 	float Radius;
 	int BoneIndex;
 };
@@ -33,8 +33,8 @@ static HIT HitDefense[] = {
 };
 static HIT HitAttack[] = {
 	{ "左ダミー", 0.1f },
-	{ "右ダミー", 0.1f },
-	{ "左足首", 0.1f },
+	{ "右ダミー", 0.2f },
+	{ "左足首", 0.2f },
 	{ "右足首", 0.1f },
 };
 static HIT HitAttackR[] = {
@@ -66,7 +66,10 @@ struct ATTACK {
 	float Damage;
 };
 static ATTACK Attack[] = {
-	{ ANIM_5P, AP_HIGH, HIT_P_L, 7, 13, 10, 0.1f },
+	{ 3, AP_MIDDLE, HIT_P_L, 1, 20, 5, 0.1f },
+	{ 4, AP_MIDDLE, HIT_K_R, 1, 20, 5, 0.1f },
+	{ 5, AP_MIDDLE, HIT_P_R, 40, 100, 20, 0.2f },
+	{ 6, AP_MIDDLE, HIT_K_R, 25, 35, 9, 0.1f },
 };
 
 // 防御の結果
@@ -81,9 +84,56 @@ struct DEFENSE {
 	int Attribute;
 	int CounterAnimIndex;
 };
-static DEFENSE Defense[1] = {
+static DEFENSE Defense[36] = {
 	// 移動
 	{ { -1, ANIM_DAMAGE2MIDDLE0, ANIM_DAMAGE2LOW0, -1, -1 }, 0 },
+	{ { ANIM_DAMAGE5HIGH0, ANIM_DAMAGE5MIDDLE0, ANIM_DAMAGE5LOW0, -1, -1 }, DA_THROWABLE },
+	{ { ANIM_DAMAGE5HIGH0, ANIM_DAMAGE5MIDDLE0, ANIM_DAMAGE5LOW0, -1, -1 }, DA_THROWABLE },
+	{ { ANIM_DAMAGE5HIGH0, ANIM_DAMAGE5MIDDLE0, ANIM_DAMAGE5LOW0, -1, -1 }, DA_THROWABLE },
+	{ { ANIM_DAMAGE5HIGH0, ANIM_DAMAGE5MIDDLE0, ANIM_DAMAGE5LOW0, -1, -1 }, DA_THROWABLE },
+	{ { ANIM_DAMAGE5HIGH0, ANIM_DAMAGE5MIDDLE0, ANIM_DAMAGE5LOW0, -1, -1 }, DA_THROWABLE },
+	{ { -1, ANIM_DAMAGE2MIDDLE0, ANIM_DAMAGE2LOW0, -1, -1 }, 0 },
+	{ { -1, ANIM_DAMAGE2MIDDLE0, ANIM_DAMAGE2LOW0, -1, -1 }, 0 },
+	{ { ANIM_DAMAGE5HIGH0, ANIM_DAMAGE5MIDDLE0, ANIM_DAMAGE5LOW0, -1, -1 }, DA_THROWABLE },
+
+	// ガード、攻撃
+	{ { -1, ANIM_DAMAGE2MIDDLE0, ANIM_GUARD2, -1, -1 }, 0 },
+	{ { -1, ANIM_DAMAGE2MIDDLE0, ANIM_DAMAGE2LOW0, -1, ANIM_BLOW20 }, DA_COUNTER },
+	{ { -1, ANIM_DAMAGE2MIDDLE0, ANIM_DAMAGE2LOW0, -1, ANIM_BLOW20 }, DA_COUNTER },
+	{ { ANIM_GUARD5, ANIM_GUARD5, ANIM_DAMAGE5LOW0, -1, -1 }, DA_THROWABLE },
+	{ { ANIM_DAMAGE5HIGH0, ANIM_DAMAGE5MIDDLE0, ANIM_DAMAGE5LOW0, -1, ANIM_BLOW50 }, DA_THROWABLE | DA_COUNTER },
+	{ { ANIM_DAMAGE5HIGH0, ANIM_DAMAGE5MIDDLE0, ANIM_DAMAGE5LOW0, -1, ANIM_BLOW50 }, DA_THROWABLE | DA_COUNTER },
+	{ { ANIM_DAMAGE5HIGH0, ANIM_DAMAGE5MIDDLE0, ANIM_DAMAGE5LOW0, -1, ANIM_BLOW50 }, DA_THROWABLE | DA_COUNTER },
+	{ { ANIM_DAMAGE5HIGH0, ANIM_DAMAGE5MIDDLE0, ANIM_DAMAGE5LOW0, -1, ANIM_BLOW50 }, DA_THROWABLE | DA_COUNTER },
+	{ { ANIM_DAMAGE5HIGH0, ANIM_DAMAGE5MIDDLE0, ANIM_DAMAGE5LOW0, -1, ANIM_BLOW50 }, DA_THROWABLE | DA_COUNTER },
+
+	// ダメージ
+	{ { -1, ANIM_DAMAGE2MIDDLE0, ANIM_DAMAGE2LOW0, -1, -1 }, DA_DAMAGE },
+	{ { -1, ANIM_DAMAGE2MIDDLE0, ANIM_DAMAGE2LOW0, -1, -1 }, DA_DAMAGE },
+	{ { ANIM_DAMAGE5HIGH0, ANIM_DAMAGE5MIDDLE0, ANIM_DAMAGE5LOW0, -1, -1 }, DA_THROWABLE | DA_DAMAGE },
+	{ { ANIM_DAMAGE5HIGH0, ANIM_DAMAGE5MIDDLE0, ANIM_DAMAGE5LOW0, -1, -1 }, DA_THROWABLE | DA_DAMAGE },
+	{ { ANIM_DAMAGE5HIGH0, ANIM_DAMAGE5MIDDLE0, ANIM_DAMAGE5LOW0, -1, -1 }, DA_THROWABLE | DA_DAMAGE },
+
+	// 吹き飛び、ダウン、ダウン攻撃
+	{ { ANIM_BLOW20, ANIM_BLOW20, ANIM_BLOW20, -1, -1 }, DA_DAMAGE },
+	{ { ANIM_BLOW50, ANIM_BLOW50, ANIM_BLOW50, -1, -1 }, DA_DAMAGE },
+	{ { -1, -1, -1, ANIM_DAMAGE_DOWN0, -1 }, 0 },
+	{ { -1, -1, -1, -1, -1 }, 0 },
+	{ { -1, -1, -1, -1, -1 }, DA_DAMAGE },
+
+	// ガード成功
+	{ { -1, ANIM_DAMAGE2MIDDLE0, ANIM_GUARD2, -1, -1 }, DA_GUARD },
+	{ { ANIM_GUARD5, ANIM_GUARD5, ANIM_DAMAGE5LOW0, -1, -1 }, DA_THROWABLE | DA_GUARD },
+
+	// 投げ
+	{ { ANIM_DAMAGE5HIGH0, ANIM_DAMAGE5MIDDLE0, ANIM_DAMAGE5LOW0, -1, -1 }, 0 },
+	{ { -1, -1, -1, -1, -1 }, 0 },
+
+	// 起きあがり、起きあがり攻撃
+	{ { -1, -1, -1, -1, -1 }, 0 },
+	{ { -1, ANIM_DAMAGE2MIDDLE0, ANIM_DAMAGE2LOW0, -1, ANIM_BLOW20 }, DA_COUNTER },
+	{ { -1, -1, -1, -1, -1 }, 0 },
+	{ { ANIM_DAMAGE5HIGH0, ANIM_DAMAGE5MIDDLE0, ANIM_DAMAGE5LOW0, -1, ANIM_BLOW50 }, DA_COUNTER },
 };
 
 // CPU
@@ -108,8 +158,7 @@ private:
 	int m_id;
 	int m_CPU;
 	bool m_moveflag;
-	int						m_animIndex;
-	int						m_old_animIndex;
+	int m_rigidity;
 	int						m_nInput[INPUT_COUNT];
 	CGauge* m_gauge;
 public:
@@ -123,14 +172,13 @@ public:
 	void InputJudge();
 	void CommandJudge();
 	void MakeTotalMatrix();
-
 	void SetAngle(float x, float y, float z);
 	void SetTranslation(float x, float y, float z);
 
 	D3DXMATRIX GetMatrixTotal(){ return m_MatTotal; }
 	D3DXMATRIX GetMatrixWorld(){ return m_MatWork; }
 	PmxSkinMesh* GetModel(){ return m_model; }
-	int GetAnimation(){ return m_motion[m_animIndex + (HalfBody ? 1 : 0)]->GetTime(); }
+	int GetAnimation(){ return m_motion[AnimIndex + (HalfBody ? 1 : 0)]->GetTime(); }
 	CGauge* GetGauge(){ return m_gauge; }
 	D3DXVECTOR3 GetTranslation(){ return m_Translation; }
 
@@ -145,6 +193,7 @@ public:
 	bool Throw;
 	bool DownAttack;
 	int NextAnimIndex;
+	int OldAnimIndex;
 	Player* Enemy;
 	int WaitTime;
 	bool AttackValid[sizeof(Attack) / sizeof(ATTACK)];
@@ -158,6 +207,7 @@ private:
 	CCamaraTPS*	camera;
 	D3DXVECTOR3 center;
 	D3DXVECTOR3 unit;
+	CDebugFont* m_font;
 	float dist;
 	int m_HitMode;
 	int m_CPUMode;

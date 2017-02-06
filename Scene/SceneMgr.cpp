@@ -28,21 +28,20 @@ CSceneMgr::~CSceneMgr()
 
 CTitle::CTitle()
 {
-	AppendObj(new CLoadTitle(), 2, true);
 	m_font = new CDebugFont();
+	font = new CDebugFont();
 	m_font->CreateFont(25);
+	font->CreateFont(50);
 	D3DXCreateTextureFromFile(m_lpd3ddevice, "asset/images/title.png", &m_pd3dTex);
 }
 
 CTitle::~CTitle()
 {
-	SAFE_RELEASE(m_pd3dTex);
 	SAFE_DELETE(m_font);
 }
 
 void CTitle::Init()
 {
-	camera = (CSimpleCamera*)FindItemBox("Camera");
 	billboard.SetPosition(0, 0, 0);
 	billboard.SetColor(D3DCOLOR_ARGB(255, 255, 0, 0));
 	billboard.SetSize(0, 0, 1.5, 1.5);
@@ -51,12 +50,12 @@ void CTitle::Init()
 
 void CTitle::Input()
 {
-	if (INPUT.CheckKeyBufferTrigger(DIK_W)){
+	/*if (INPUT.CheckKeyBufferTrigger(DIK_W)){
 		Now_Select = (Now_Select + 1) % eMenu_Num;
 	}
 	if (INPUT.CheckKeyBufferTrigger(DIK_S)){
 		Now_Select = (Now_Select + (eMenu_Num - 1)) % eMenu_Num;
-	}
+	}*/
 	if (INPUT.CheckKeyBufferTrigger(DIK_SPACE)){
 		switch (Now_Select)
 		{
@@ -66,7 +65,6 @@ void CTitle::Input()
 			break;
 		case eMenu_Config:
 			RemoveObj(1, INT_MAX - 1);
-			AppendObj(new CConfig(false), 1, true);
 			break;
 		}
 	}
@@ -78,13 +76,13 @@ void CTitle::Render()
 	float sh = (float)m_height;
 	float x = sw*0.45f;
 	float GAME_FONT = sh*0.5f;
-	float CONFIG_FONT = sh*0.55f;
+	float CONFIG_FONT = sh*0.35f;
 	RECT rc;
-	title();
+	//title();
 	SetRect(&rc, (int)x, (int)GAME_FONT, 0, 0);
 	m_font->Draw("ゲーム", -1, &rc, D3DCOLOR_ARGB(255, 0, 0, 0));
-	SetRect(&rc, (int)x, (int)CONFIG_FONT, 0, 0);
-	m_font->Draw("設定", -1, &rc, D3DCOLOR_ARGB(255, 0, 0, 0));
+	SetRect(&rc, (int)sw*0.3f, (int)CONFIG_FONT, 0, 0);
+	font->Draw("fighting game", -1, &rc, D3DCOLOR_ARGB(255, 0, 0, 0));
 	float y = 0;
 	switch (Now_Select)
 	{
@@ -128,17 +126,14 @@ void CTitle::title(){
 	m_Vertex[3].tu = 1.0f;
 	m_Vertex[3].tv = 1.0f;
 
-	//m_lpd3ddevice->SetRenderState(D3DRS_LIGHTING, false);
-	//m_lpd3ddevice->SetFVF(D3DFVFCUSTOM_VERTEX);
-	//m_lpd3ddevice->SetTexture(0, m_pd3dTex);
-	//// ワールド変換行列をセット
-	//m_lpd3ddevice->SetTransform(D3DTS_WORLD, &a);
-	//m_lpd3ddevice->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, m_Vertex, sizeof(MyVertex));
-	//m_lpd3ddevice->SetRenderState(D3DRS_LIGHTING, true);
+	m_lpd3ddevice->SetRenderState(D3DRS_LIGHTING, false);
+	m_lpd3ddevice->SetFVF(D3DFVFCUSTOM_VERTEX);
+	m_lpd3ddevice->SetTexture(0, m_pd3dTex);
+	// ワールド変換行列をセット
+	m_lpd3ddevice->SetTransform(D3DTS_WORLD, &a);
+	m_lpd3ddevice->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, m_Vertex, sizeof(MyVertex));
+	m_lpd3ddevice->SetRenderState(D3DRS_LIGHTING, true);
 
-	D3DXVECTOR3 vec3Trans = D3DXVECTOR3(100, 100, 0.99f);
-	vec3Trans = camera->InverseScreen(vec3Trans);
-	BatchProcessing(vec3Trans, 200, 200, camera->GetViewMatrix(), m_pd3dTex);
 }
 
 void CTitle::BatchProcessing(D3DXVECTOR3 in, float x, float y, const D3DXMATRIX& matView, LPDIRECT3DTEXTURE9 tex)
@@ -217,6 +212,13 @@ void CLoadStage::LoadThread(void *data)
 	m_loadplayer1.join();
 	m_loadplayer2.join();*/
 
+	ld.gameobj = new Versus();
+	ld.autodelete = true;
+	strcpy_s(ld.name, 32, "versus");
+	ld.priority = VERSUS_PRIORITY;
+	temp.push_back(ld);
+	AppendItemBox("versus", ld.gameobj);
+
 	//カメラ
 	ld.gameobj = new CCamaraTPS();
 	ld.autodelete = true;
@@ -224,13 +226,6 @@ void CLoadStage::LoadThread(void *data)
 	ld.priority = CAMERA_PRIORITY;
 	temp.push_back(ld);
 	AppendItemBox("TPScamera", ld.gameobj);
-
-	ld.gameobj = new Versus();
-	ld.autodelete = true;
-	strcpy_s(ld.name, 32, "versus");
-	ld.priority = VERSUS_PRIORITY;
-	temp.push_back(ld);
-	AppendItemBox("versus", ld.gameobj);
 
 	/*ld.gameobj = new CHitCheck();
 	ld.autodelete = true;

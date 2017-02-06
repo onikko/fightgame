@@ -21,3 +21,14 @@ public:
 	void Reset();
 };
 
+class CReadHitData
+{
+private:
+	FILE* fp;
+	char buff[MAX_PATH];
+public:
+	CReadHitData(const char* text);
+	~CReadHitData();
+	void ReadData(char* buf);
+};
+

@@ -55,3 +55,23 @@ CLoadHitData::~CLoadHitData()
 {
 	fclose(fp);
 }
+
+
+
+
+
+
+CReadHitData::CReadHitData(const char* text)
+{
+	fp = fopen(text, "wt");
+}
+
+void CReadHitData::ReadData(char* buf)
+{
+	fputs(buf, fp);
+}
+
+CReadHitData::~CReadHitData()
+{
+	fclose(fp);
+}

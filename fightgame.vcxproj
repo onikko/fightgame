@@ -62,6 +62,7 @@
     <ClInclude Include="LoadHitData.h" />
     <ClInclude Include="Rand.h" />
     <ClInclude Include="Render.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Scene\LoadData.h" />
     <ClInclude Include="Scene\SceneMgr.h" />
     <ClInclude Include="SimpleCamera.h" />
@@ -88,6 +89,9 @@
     <ClInclude Include="Utilities\SmartPointer.h" />
     <ClInclude Include="Versus.h" />
     <ClInclude Include="Window\Application.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="fightgame.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B9EBCBE4-2BC2-4E6D-8EB7-DF045646CAFF}</ProjectGuid>

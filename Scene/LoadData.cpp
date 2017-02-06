@@ -53,7 +53,7 @@ void CLoadData::Render()
 		//確認用
 		sprintf((char *)str, "デバッグ：%5.2f", debug);
 		SetRect(&rc, DEBUG_X, DEBUG_Y, 0, 0);
-		m_font->Draw(str, -1, &rc, D3DCOLOR_ARGB(255, 0, 0, 0));
+		//m_font->Draw(str, -1, &rc, D3DCOLOR_ARGB(255, 0, 0, 0));
 		//ロードフォント
 		sprintf((char *)str, "Now Loading");
 		SetRect(&rc, LOADFONT_X, LOADFONT_Y, 0, 0);

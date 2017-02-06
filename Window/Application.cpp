@@ -5,8 +5,8 @@
 #define		NAME			"win32"
 #define		TITLE			"game"
 #define		FULLSCREEN		0				// フルスクリーンフラグ
-#define		SCREEN_X		1024
-#define		SCREEN_Y		768
+#define		SCREEN_X		800
+#define		SCREEN_Y		600
 
 CGame g_game;
 FILE*	fp;

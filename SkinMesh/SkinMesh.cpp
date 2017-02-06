@@ -121,6 +121,7 @@ void SkinMesh::Draw(D3DXMATRIX world, D3DLIGHT9* light, D3DXMATRIX view, D3DXMAT
 	}
 }
 
+
 void SkinMesh::CreateBoneObj() {
 	boneObj.resize(bones.size());
 	for (unsigned int i = 0; i < bones.size(); i++) D3DXCreateSphere(pDevice, 0.02f, 4, 2, &boneObj[i], 0);

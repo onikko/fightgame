@@ -6,7 +6,7 @@ float4 ambient;
 float4 diffuse;
 float4 specular;
 float power;
-float lightbloompower = 1.0f;
+float lightbloompower = 0.0f;
 
 float3 camerapos;
 
