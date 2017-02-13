@@ -55,7 +55,7 @@ bool VmdMotionController::LoadVmdFile(LPCTSTR filename, vector<Bone>* _bones, ve
 {	
 	const int frame_rate = 60;			// 本プログラムのフレームレート
 	const int mmd_frame_rate = 30;		// MMDのフレームレート
-
+	m_over_flag = false;
 	bones = _bones;
 	pmdIkData = _pmdIkData;
 	time = 0;
@@ -141,6 +141,7 @@ void VmdMotionController::UpdateBoneMatrix() {
 	m_isfinished = finish_flg;
 	if( finish_flg && m_loop_flg ){
 		time = 0;
+		m_over_flag = true;
 		for (unsigned int i = 0; i < bones->size(); i++){
 			ite_keyFrames[i] = keyFrames[i].begin();
 		}

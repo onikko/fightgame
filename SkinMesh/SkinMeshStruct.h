@@ -29,6 +29,7 @@ struct Bone {
 	D3DXMATRIX initMat;		// 初期姿勢行列(ボーンローカル座標系)
 	D3DXMATRIX boneMat;		// ボーン行列(ボーンローカル座標系)
 	D3DXMATRIX offsetMat;	// ボーンオフセット行列(モデルローカル座標系)
+	D3DXMATRIX combinedMat;
 	Bone() : type(), id(), parent(), firstChild(), sibling() {	// コンストラクタ
 		D3DXMatrixIdentity(&initMat);
 		D3DXMatrixIdentity(&offsetMat);
@@ -41,6 +42,17 @@ struct Bone {
 	D3DXVECTOR3 Bone::GetModelLocalPosition() {		// モデルローカル座標系でのボーン位置を取得
 		D3DXVECTOR3 v(0, 0, 0);
 		return *D3DXVec3TransformCoord(&v, &v, &GetModelLocalBoneMat());
+	}
+	void SetCombinedMatrix(D3DXMATRIX& m, D3DXVECTOR3& pos){
+		D3DXVECTOR3 m_wpos;
+		D3DXVec3TransformCoord(&m_wpos, &pos, &m);
+		combinedMat = m;
+		combinedMat._41 = m_wpos.x;
+		combinedMat._42 = m_wpos.y;
+		combinedMat._43 = m_wpos.z;
+	}
+	D3DXMATRIX GetCombinedMatrix(){
+		return combinedMat;
 	}
 };
 

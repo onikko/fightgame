@@ -62,8 +62,7 @@ public:
 	void GetKeyBuffer();
 	bool CheckKeyBuffer(int keyno);
 	bool CheckKeyBufferTrigger(int keyno);
-	BOOL CALLBACK EnumJoysticksCallback(
-		const DIDEVICEINSTANCE* did);
+	BOOL CALLBACK EnumJoysticksCallback(const DIDEVICEINSTANCE* did);
 };
 
 #define INPUT CInput::Instance()

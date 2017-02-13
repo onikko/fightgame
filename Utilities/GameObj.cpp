@@ -86,16 +86,17 @@ bool CGameObj::Initialize(HWND hwnd, HINSTANCE hInstance, bool fullscreenflag, i
 	D3DXVECTOR4 color(1, 1, 1, 1);
 	DummyTexture->Fill(&color);
 
+#define RS  m_lpd3ddevice->SetRenderState
+
 	// ライト有効
-	m_lpd3ddevice->SetRenderState(D3DRS_LIGHTING, true);
+	RS(D3DRS_LIGHTING, true);
 	// カリング無効化
-	//m_lpd3ddevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	m_lpd3ddevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	RS(D3DRS_CULLMODE, D3DCULL_CCW);
 	// 環境光セット
-	m_lpd3ddevice->SetRenderState(D3DRS_AMBIENT, 0xffffffff);
-	m_lpd3ddevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);    //アルファブレンディングの有効化
-	m_lpd3ddevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);  //SRCの設定
-	m_lpd3ddevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	RS(D3DRS_AMBIENT, 0xffffffff);
+	RS(D3DRS_ALPHABLENDENABLE, TRUE);    //アルファブレンディングの有効化
+	RS(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);  //SRCの設定
+	RS(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 	m_height = height;
 	m_width = width;
 

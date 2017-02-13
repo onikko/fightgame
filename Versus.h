@@ -8,35 +8,37 @@
 #include "Input_macro.h"
 #include "HitBox.h"
 #include "UI/Gauge.h"
-#include"Utilities/CDebugFont.h"
+#include "Utilities/CDebugFont.h"
 
 // 当たり判定
 struct HIT {
 	string BoneName;
 	float Radius;
 	int BoneIndex;
+	D3DXMATRIX world;
+	D3DXVECTOR3 pos;
 };
-static HIT HitDefense[] = {
-	{ "腰", 0.01f },
-	{ "上半身", 0.2f },
-	{ "頭", 0.2f },
-	{ "左肩", 0.15f },
-	{ "右肩", 0.15f },
-	{ "左ひじ", 0.15f },
-	{ "右ひじ", 0.15f },
-	{ "左足", 0.15f },
-	{ "右足", 0.15f },
-	{ "左ひざ", 0.15f },
-	{ "右ひざ", 0.15f },
-	{ "左足首", 0.15f },
-	{ "右足首", 0.15f },
-};
-static HIT HitAttack[] = {
-	{ "左ダミー", 0.1f },
-	{ "右ダミー", 0.2f },
-	{ "左足首", 0.2f },
-	{ "右足首", 0.1f },
-};
+//static HIT HitDefense[] = {
+//	{ "腰", 0.01f },
+//	{ "上半身", 0.2f },
+//	{ "頭", 0.2f },
+//	{ "左肩", 0.15f },
+//	{ "右肩", 0.15f },
+//	{ "左ひじ", 0.15f },
+//	{ "右ひじ", 0.15f },
+//	{ "左足", 0.15f },
+//	{ "右足", 0.15f },
+//	{ "左ひざ", 0.15f },
+//	{ "右ひざ", 0.15f },
+//	{ "左足首", 0.15f },
+//	{ "右足首", 0.15f },
+//};
+//static HIT HitAttack[] = {
+//	{ "左ダミー", 0.1f },
+//	{ "右ダミー", 0.2f },
+//	{ "左足首", 0.2f },
+//	{ "右足首", 0.1f },
+//};
 static HIT HitAttackR[] = {
 	{ "右ダミー", 0.1f },
 	{ "左ダミー", 0.1f },
@@ -147,6 +149,8 @@ struct CPU_ACTION {
 #define VERSUS_PRIORITY 50000
 #define INPUT_COUNT 60
 
+#include "Hit.h"
+
 class Player : CCharacterMng
 {
 private:
@@ -155,6 +159,11 @@ private:
 	D3DXMATRIX CenterMatrix;
 	LPDIRECT3DDEVICE9 m_lpd3ddevice;
 	CMath*					m_math;
+
+	/*Hit *HitDefense;
+	Hit *HitAttack;*/
+	static HitA *HitDefense;
+	static HitA *HitAttack;
 	int m_id;
 	int m_CPU;
 	bool m_moveflag;
@@ -175,12 +184,21 @@ public:
 	void SetAngle(float x, float y, float z);
 	void SetTranslation(float x, float y, float z);
 
+	static void LoadData();
+	static void GetDefenseBuff(char* buff, int i);
+	static void GetAttackBuff(char* buff, int i);
+
 	D3DXMATRIX GetMatrixTotal(){ return m_MatTotal; }
 	D3DXMATRIX GetMatrixWorld(){ return m_MatWork; }
 	PmxSkinMesh* GetModel(){ return m_model; }
 	int GetAnimation(){ return m_motion[AnimIndex + (HalfBody ? 1 : 0)]->GetTime(); }
 	CGauge* GetGauge(){ return m_gauge; }
 	D3DXVECTOR3 GetTranslation(){ return m_Translation; }
+	/*Hit* GetDefense(){ return HitDefense; }
+	Hit* GetAttack(){ return HitAttack; }*/
+
+	HitA* GetDefense(){ return HitDefense; }
+	HitA* GetAttack(){ return HitAttack; }
 
 	bool CPU;
 	const int* CPUCommand;
@@ -193,7 +211,7 @@ public:
 	bool Throw;
 	bool DownAttack;
 	int NextAnimIndex;
-	int OldAnimIndex;
+	int oldAnimIndex;
 	Player* Enemy;
 	int WaitTime;
 	bool AttackValid[sizeof(Attack) / sizeof(ATTACK)];
@@ -212,6 +230,7 @@ private:
 	int m_HitMode;
 	int m_CPUMode;
 	CHitBox* m_HitBall;
+	int Dsize;
 public:
 	Versus();
 	~Versus();

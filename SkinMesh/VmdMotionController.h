@@ -16,6 +16,7 @@ private:
 	int time;							// 時間
 	bool m_isfinished;
 	int m_loop_flg;
+	bool m_over_flag;
 	vector<Bone>* bones;
 	vector<MmdStruct::PmdIkData>* pmdIkData;
 	/// キーフレームアニメーション
@@ -40,6 +41,8 @@ public:
 		return m_isfinished;
 	}
 	int GetTime(){ return time; }
+	bool GetOverFlag(){ return m_over_flag; }
+	void SetOverFlag(bool in_flag){ m_over_flag = in_flag; }
 	void UpdateBoneMatrix();				// キーフレームデータを元にボーン行列を更新
 	void AdvanceTime();
 };

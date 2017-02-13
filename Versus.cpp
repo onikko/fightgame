@@ -10,6 +10,9 @@
 #define STAGE_SIZE 7.5f
 #define MIN_DIST 0.7f
 
+#define DEFENSESIZE 13
+#define ATTACKSIZE 4
+
 typedef struct {
 	LPCTSTR g_vmdname;
 	bool loop_flag;
@@ -22,6 +25,7 @@ VMDDATA g_VmdData[] = {
 	{ "asset/motion/kik.vmd", false },
 	{ "asset/motion/sp_pan.vmd", false },
 	{ "asset/motion/sp_kik.vmd", false },
+	{ "asset/motion/www.vmd", false },
 };
 
 CPU_ACTION CPUActionNear[] = {
@@ -54,19 +58,33 @@ CPU_ACTION CPUActionFar[] = {
 	{ 3, CMD2G, 20 },
 	{ 3, CMD5G, 20 },
 };
+//void set_status();
+//void get_mode();
+//void set_mode();
+//
+///* 関数テーブルの型 */
+//typedef void(*FUNCTBL)(void);
+//
+///* 関数テーブル */
+//FUNCTBL func_tbl[] = {
+//	set_status,
+//	get_mode,
+//	set_mode
+//};
+
+HitA* Player::HitDefense;
+HitA* Player::HitAttack;
 
 SmartPointer<CSkinMeshEffect> g_Effect(new CSkinMeshEffect());
 CRand Rand;
 
 BOOL CALLBACK DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
-void LoadData();
 
 ////////////////////////////////////////////////////////////////
 // コンストラクタ
 ////////////////////////////////////////////////////////////////
 Player::Player(LPDIRECT3DDEVICE9 lpd3ddev, int CPUMode, int id) : m_lpd3ddevice(lpd3ddev), m_CPU(CPUMode), m_id(id)
 {
-	bool sts;
 	if (id == 0){
 		m_Angle = D3DXVECTOR3(0, -90, 0);
 		m_Translation = D3DXVECTOR3(-1.8f, 0, 0.);
@@ -76,6 +94,7 @@ Player::Player(LPDIRECT3DDEVICE9 lpd3ddev, int CPUMode, int id) : m_lpd3ddevice(
 		m_Translation = D3DXVECTOR3(1.8f, 0, 0.);
 	}
 	// PMXモデル生成
+	bool sts;
 	m_model = new PmxSkinMesh();
 	m_model->SetDevice(lpd3ddev);
 	sts = m_model->LoadModel("asset/model/sakuya/sakuya(kari).pmx", lpd3ddev);
@@ -84,29 +103,37 @@ Player::Player(LPDIRECT3DDEVICE9 lpd3ddev, int CPUMode, int id) : m_lpd3ddevice(
 		return;
 	}
 	// モーション生成
-
-	/************        変更する        ***************/
-	for (int i = 0; i < 7; i++){
+	for (int i = 0; i < sizeof(g_VmdData) / sizeof(VMDDATA); i++){
 		m_motion[i] = new VmdMotionController();
 		m_motion[i]->LoadVmdFile(g_VmdData[i].g_vmdname, m_model->GetBoneAddress(), m_model->GetIkAddress(), g_VmdData[i].loop_flag);
 	}
-	/************        変更する        ***************/
 
 	// エフェクトファイル生成
 	g_Effect->LoadEffect("effect/skinmesh.fx");
 
+	HitDefense = new HitA[DEFENSESIZE]();
+	HitAttack = new HitA[ATTACKSIZE]();
+
 	LoadData();
 
-	// ボーン名からIDを取得
-	for (int i = 0; i < sizeof(HitDefense) / sizeof(HIT); i++){
-		HitDefense[i].BoneIndex = m_model->GetBoneId(HitDefense[i].BoneName);
+	// ボーン名からIDを取得と初期化
+	for (int i = 0; i < DEFENSESIZE; i++){
+		HitDefense[i].SetBoneIndex(m_model->GetBoneId(HitDefense[i].GetBoneName()));
+		HitDefense[i].Setpos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		D3DXMatrixIdentity(&HitDefense[i].Getworld());
 	}
-	for (int i = 0; i < sizeof(HitAttack) / sizeof(HIT); i++){
-		HitAttack[i].BoneIndex = m_model->GetBoneId(HitAttack[i].BoneName);
+	for (int i = 0; i < ATTACKSIZE; i++){
+		HitAttack[i].SetBoneIndex(m_model->GetBoneId(HitAttack[i].GetBoneName()));
+		HitAttack[i].Setpos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		D3DXMatrixIdentity(&HitAttack[i].Getworld());
 	}
 	for (int i = 0; i < sizeof(HitAttackR) / sizeof(HIT); i++){
 		HitAttackR[i].BoneIndex = m_model->GetBoneId(HitAttackR[i].BoneName);
+		HitAttackR[i].pos = { 0.0f, 0.0f, 0.0f };
+		D3DXMatrixIdentity(&HitAttackR[i].world);
 	}
+	// ゲージ生成
+	m_gauge = new CGauge(id);
 
 	m_rigidity = 0;
 	CPU = false;
@@ -117,10 +144,9 @@ Player::Player(LPDIRECT3DDEVICE9 lpd3ddev, int CPUMode, int id) : m_lpd3ddevice(
 	WaitTime = 0;
 	HalfBody = false;
 	NextAnimIndex = -1;
-	AnimIndex = OldAnimIndex = 1;
+	AnimIndex = oldAnimIndex = 1;
 	m_moveflag = false;
 	m_Reverse = (id == 1);
-	m_gauge = new CGauge(id);
 	Rand.Init(1);
 	m_id ? printf("P2を読み込みました\n") : printf("P1を読み込みました\n");
 }
@@ -130,11 +156,16 @@ Player::Player(LPDIRECT3DDEVICE9 lpd3ddev, int CPUMode, int id) : m_lpd3ddevice(
 ////////////////////////////////////////////////////////////////
 Player::~Player()
 {
-	SAFE_DELETE(m_model);
-	for (int i = 0; i < 7; i++){
+	// ゲージ破棄
+	SAFE_DELETE(m_gauge);
+	SAFE_DELETE_ARRAY(HitAttack);
+	SAFE_DELETE_ARRAY(HitDefense);
+	// モーション破棄
+	for (int i = 0; i < sizeof(g_VmdData) / sizeof(VMDDATA); i++){
 		SAFE_DELETE(m_motion[i]);
 	}
-	SAFE_DELETE(m_gauge);
+	// モデル破棄
+	SAFE_DELETE(m_model);
 	m_id ? printf("P2を破棄しました\n") : printf("P1を破棄しました\n");
 }
 
@@ -149,6 +180,10 @@ void Player::Init()
 	m_model->SetMotion(m_motion[AnimIndex]);
 	m_model->SetTech(g_Effect);
 	MakeTotalMatrix();
+	//入力を１つ移動する
+	for (int i = 0; i < INPUT_COUNT; i++){
+		m_nInput[i] = INPUT_NOT5;
+	}
 }
 
 ////////////////////////////////////////////////////////////////
@@ -156,11 +191,29 @@ void Player::Init()
 ////////////////////////////////////////////////////////////////
 void Player::Input()
 {
+	D3DXVECTOR3 v;
+	D3DXVECTOR3 a;
 	m_Speed = 0;
 	InputJudge();
 	if (m_rigidity == 0){
 		CommandJudge();
 	}
+	if (INPUT.CheckKeyBuffer(DIK_SPACE)){
+		v = D3DXVECTOR3(0, 0.2f,0);
+		a = D3DXVECTOR3(0, -0.01f, 0);
+	}
+	// 吹き飛び
+	if (INPUT.CheckKeyBuffer(DIK_SPACE)){
+		v += a;
+		m_Translation += v;
+	}
+	else {
+		m_Translation += D3DXVECTOR3(0, -0.2f, 0);
+		if (m_Translation.y < 0.0f){
+			m_Translation.y = 0;
+		}
+	}
+
 	//入力がなければ
 	m_moveflag = CheckInput(CMD5) && m_rigidity == 0 ? false : true;
 }
@@ -170,13 +223,18 @@ void Player::Input()
 ////////////////////////////////////////////////////////////////
 void Player::Update()
 {
-	//// ダメージとガード
-	//if (NextAnimIndex != -1) {
-	//	//CheckHalfBody();
-	//	AnimIndex = NextAnimIndex;
-	//	NextAnimIndex = -1;
-	//}
-	//else
+	// 動作の切り替え
+	int index = AnimIndex;
+	VmdMotionController* old = m_motion[oldAnimIndex];
+	Throw = DownAttack = false;
+	// ダメージとガード
+	if (NextAnimIndex != -1) {
+		//CheckHalfBody();
+		//old->ResetTime();
+		//AnimIndex = NextAnimIndex;
+		//NextAnimIndex = -1;
+	}
+
 	if (m_rigidity != 0){
 		m_Speed = 0.0f;
 	}
@@ -189,7 +247,6 @@ void Player::Update()
 		if (m_Translation.x > STAGE_SIZE){
 			m_Translation.x += STAGE_SIZE - m_Translation.x;
 		}
-		MakeTotalMatrix();
 		m_rigidity--;
 	}
 	else{
@@ -202,16 +259,35 @@ void Player::Update()
 			AttackValid[j] = true;
 		}
 	}
+	VmdMotionController* now = m_motion[AnimIndex];
+	D3DXVECTOR3 pos;
+	pos = {
+		m_model->GetBoneAddress()->operator[](0).GetModelLocalPosition().x,
+		m_model->GetBoneAddress()->operator[](0).GetModelLocalPosition().y,
+		m_model->GetBoneAddress()->operator[](0).GetModelLocalPosition().z,
+	};
 	//アニメーションが前回と違うと更新
-	if (OldAnimIndex != AnimIndex){
-		m_motion[OldAnimIndex]->ResetTime();
+	if (old != now){
+		m_motion[oldAnimIndex]->ResetTime();
+		// 位置更新
+		D3DXMATRIX& m = m_model->GetBoneAddress()->operator[](0).GetCombinedMatrix();
+		m_Translation = D3DXVECTOR3(m._41, m._42, m._43);
 		m_model->SetMotion(m_motion[AnimIndex]);
-		OldAnimIndex = AnimIndex;
+		oldAnimIndex = AnimIndex;
+	}
+	// タイムが超えた時の処理
+	if (m_motion[AnimIndex]->GetOverFlag()){
+		// 位置更新
+		D3DXMATRIX& m = m_model->GetBoneAddress()->operator[](0).GetCombinedMatrix();
+		m_Translation = D3DXVECTOR3(m._41, m._42, m._43);
+		m_motion[AnimIndex]->SetOverFlag(false);
 	}
 	//アニメーションの時間を進める
 	m_motion[AnimIndex]->AdvanceTime();
 	//ボーンを更新する
 	m_motion[AnimIndex]->UpdateBoneMatrix();
+	m_model->GetBoneAddress()->operator[](0).SetCombinedMatrix(m_MatWork, pos);
+	MakeTotalMatrix();
 }
 
 ////////////////////////////////////////////////////////////////
@@ -286,13 +362,13 @@ void Player::InputJudge()
 				CPUCommand = CMD_D8P;
 				CPURepeat = 0;
 			}
-			else
+			else{
 				if (AnimIndex == ANIM_DOWN0){
 					if (Rand.Real1() < 0.1f){
 						CPUCommand = Rand.Real1() < 0.5f ? CMD5K : CMD2K;
 					}
 					else {
-						CPUCommand = Rand.Real1()< 0.5f ? CMD5 : CMD2;
+						CPUCommand = Rand.Real1() < 0.5f ? CMD5 : CMD2;
 					}
 					CPURepeat = 0;
 				}
@@ -321,6 +397,7 @@ void Player::InputJudge()
 					CPURepeat = (int)(Rand.Real1()*action[i].Repeat);
 				}
 				CPUCommandTime = 0;
+			}
 		}
 		else {
 			if (CPUCommand[CPUCommandTime] & INPUT_END){
@@ -353,6 +430,7 @@ void Player::CommandJudge()
 {
 	//CMD8
 	if (CheckInput(CMD8)){
+		AnimIndex = 7;
 	}
 	//CMD2
 	else if (CheckInput(CMD2)){
@@ -403,18 +481,18 @@ void Player::CommandJudge()
 	}
 }
 
-void LoadData()
+void Player::LoadData()
 {
 	CLoadHitData* LoadDefense = new CLoadHitData("defense.txt");
-	for (int i = 0; i < sizeof(HitDefense) / sizeof(HIT); i++){
-		HitDefense[i].BoneName = LoadDefense->LoadName();
-		HitDefense[i].Radius = LoadDefense->LoadRadius();
+	for (int i = 0; i < DEFENSESIZE; i++){
+		HitDefense[i].SetBoneName(LoadDefense->LoadName());
+		HitDefense[i].SetRadius(LoadDefense->LoadRadius());
 		LoadDefense->Reset();
 	}
 	CLoadHitData* LoadAttack = new CLoadHitData("attack.txt");
-	for (int i = 0; i < sizeof(HitAttack) / sizeof(HIT); i++){
-		HitAttack[i].BoneName = LoadAttack->LoadName();
-		HitAttack[i].Radius = LoadAttack->LoadRadius();
+	for (int i = 0; i < ATTACKSIZE; i++){
+		HitAttack[i].SetBoneName(LoadAttack->LoadName());
+		HitAttack[i].SetRadius(LoadAttack->LoadRadius());
 		LoadAttack->Reset();
 	}
 	SAFE_DELETE(LoadAttack);
@@ -432,7 +510,8 @@ void Player::MakeTotalMatrix()
 ////////////////////////////////////////////////////////////////
 // 回転移動量をセット（前回描画して以降の回転量）
 ////////////////////////////////////////////////////////////////
-void Player::SetAngle(float x, float y, float z){
+void Player::SetAngle(float x, float y, float z)
+{
 	m_Angle.x = x;
 	m_Angle.y = y;
 	m_Angle.z = z;
@@ -441,13 +520,22 @@ void Player::SetAngle(float x, float y, float z){
 ////////////////////////////////////////////////////////////////
 // 平行移動量をセット（前回描画して以降の移動量）
 ////////////////////////////////////////////////////////////////
-void Player::SetTranslation(float x, float y, float z){
+void Player::SetTranslation(float x, float y, float z)
+{
 	m_Translation.x += x;
 	m_Translation.y += y;
 	m_Translation.z += z;
 }
 
+void Player::GetDefenseBuff(char* buff, int i)
+{
+	sprintf(buff, "%.2f", HitDefense[i].GetRadius());
+}
 
+void Player::GetAttackBuff(char* buff, int i)
+{
+	sprintf(buff, "%.2f", HitAttack[i].GetRadius());
+}
 
 
 
@@ -455,18 +543,23 @@ void Player::SetTranslation(float x, float y, float z){
 // Versus
 //********************************************************************************************
 
+#define GETMODEL(i,j)	m_player[i]->GetModel()->GetBoneAddress()->operator[](j)
+
 ////////////////////////////////////////////////////////////////
 // コンストラクタ
 ////////////////////////////////////////////////////////////////
 Versus::Versus()
 {
+	// プレイヤー生成
 	for (int i = 0; i < 2; i++){
 		m_player[i] = new Player(m_lpd3ddevice, i, i);
 	}
 	for (int i = 0; i < 2; i++){
 		m_player[i]->Enemy = m_player[1 - i];
 	}
+	// 当たり判定用球生成
 	m_HitBall = new CHitBox("asset/model/Ball.x");
+	// デバッグフォント生成
 	m_font = new CDebugFont(35);
 	m_CPUMode = 0;
 	m_HitMode = 1;
@@ -478,11 +571,14 @@ Versus::Versus()
 ////////////////////////////////////////////////////////////////
 Versus::~Versus()
 {
+	// デバッグフォント破棄
+	SAFE_DELETE(m_font);
+	// 当たり判定用球破棄
+	SAFE_DELETE(m_HitBall);
+	// プレイヤー破棄
 	for (int i = 0; i < 2; i++){
 		SAFE_DELETE(m_player[i]);
 	}
-	SAFE_DELETE(m_font);
-	SAFE_DELETE(m_HitBall);
 	printf("Versusを破棄しました\n");
 }
 
@@ -517,8 +613,8 @@ void Versus::Input()
 		// ダイアログボックス生成
 		DialogBox(m_hinstance, MAKEINTRESOURCE(IDD_DIALOG1), 0, DialogProc);
 	}
-	if (INPUT.CheckKeyBufferTrigger(DIK_F4)){
-		LoadData();
+	if (INPUT.CheckKeyBufferTrigger(DIK_F6)){
+		m_GameEndFlag = true;
 	}
 	for (int i = 0; i < 2; i++){
 		m_player[i]->Input();
@@ -537,8 +633,8 @@ void Versus::Update()
 		m_player[i]->Update();
 	}
 	// 調整の準備
-	D3DXMATRIX& m0 = m_player[0]->GetMatrixWorld();
-	D3DXMATRIX& m1 = m_player[1]->GetMatrixWorld();
+	D3DXMATRIX& m0 = GETMODEL(0, 0).GetCombinedMatrix();
+	D3DXMATRIX& m1 = GETMODEL(1, 0).GetCombinedMatrix();
 	D3DXVECTOR3 p0 = D3DXVECTOR3(m0._41, 0, m0._43);
 	D3DXVECTOR3 p1 = D3DXVECTOR3(m1._41, 0, m1._43);
 	center = (p0 + p1)*0.5f;
@@ -553,7 +649,7 @@ void Versus::Update()
 		Player* enemy = m_player[1 - i];
 		DEFENSE* defense = &Defense[enemy->AnimIndex];
 		float time = (float)player->GetAnimation();
-		for (int j = 0, jn = sizeof(Attack) / sizeof(ATTACK); j<jn; j++) {
+		for (int j = 0, jn = sizeof(Attack) / sizeof(ATTACK); j < jn; j++) {
 			ATTACK* attack = &Attack[j];
 			if (player->AttackValid[j] && attack->AnimIndex == player->AnimIndex &&
 				attack->FromTime <= time && time <= attack->ToTime && CheckHit(i, attack->HitIndex)){
@@ -571,10 +667,6 @@ void Versus::Update()
 					if (player->AnimIndex == ANIM_3236P || player->AnimIndex == ANIM_5K){
 						enemy->NextAnimIndex = defense->NextAnimIndex[AP_BLOW];
 					}
-					//SEPlayer->Play(SECounterHit);
-				}
-				else {
-					//SEPlayer->Play(SENormalHit);
 				}
 				break;
 			}
@@ -607,6 +699,30 @@ void Versus::Update()
 	for (int i = 0; i<2; i++) {
 		m_player[i]->m_Reverse = (v[i].x>v[1 - i].x);
 	}
+	D3DXMATRIX mat;
+	// 当たり判定更新
+	if (m_HitMode>0){
+		for (int i = 0; i<2; i++){
+			//Hit* hit;
+			HitA* hit;
+			int n;
+			if ((m_HitMode + i) % 2 == 0){
+				hit = m_player[i]->GetDefense();
+				n = DEFENSESIZE;
+			}
+			else{
+				hit = m_player[i]->GetAttack();
+				n = ATTACKSIZE;
+			}
+			for (int j = 0; j<n; j++){
+				hit[j].Setpos(D3DXVECTOR3(GETMODEL(i, hit[j].GetBoneIndex()).GetModelLocalPosition().x,
+					GETMODEL(i, hit[j].GetBoneIndex()).GetModelLocalPosition().y,
+					GETMODEL(i, hit[j].GetBoneIndex()).GetModelLocalPosition().z));
+				m_HitBall->Update(mat, m_player[i]->GetMatrixWorld(), hit[j].Getpos(), hit[j].GetRadius());
+				hit[j].Setworld(mat);
+			}
+		}
+	}
 
 	// ゲージ
 	for (int i = 0; i<2; i++) {
@@ -632,27 +748,23 @@ void Versus::Render()
 		// ゲージ
 		m_player[i]->GetGauge()->Draw();
 	}
-	// 当たり判定
+
+	// 当たり判定描画
 	if (m_HitMode>0){
 		for (int i = 0; i<2; i++){
-			HIT* hit;
+			//Hit* hit;
+			HitA* hit;
 			int n;
 			if ((m_HitMode + i) % 2 == 0){
-				hit = HitDefense;
-				n = sizeof(HitDefense) / sizeof(HIT);
+				hit = m_player[i]->GetDefense();
+				n = DEFENSESIZE;
 			}
 			else{
-				hit = HitAttack;
-				n = sizeof(HitAttack) / sizeof(HIT);
+				hit = m_player[i]->GetAttack();
+				n = ATTACKSIZE;
 			}
 			for (int j = 0; j<n; j++){
-				D3DXVECTOR3 pos;
-				D3DXMATRIX world;
-				pos.x = m_player[i]->GetModel()->GetBoneAddress()->operator[](hit[j].BoneIndex).GetModelLocalPosition().x;
-				pos.y = m_player[i]->GetModel()->GetBoneAddress()->operator[](hit[j].BoneIndex).GetModelLocalPosition().y;
-				pos.z = m_player[i]->GetModel()->GetBoneAddress()->operator[](hit[j].BoneIndex).GetModelLocalPosition().z;
-				m_HitBall->Update(world, m_player[i]->GetMatrixWorld(), pos, hit[j].Radius);
-				if (hit == HitAttack){
+				if (hit == m_player[i]->GetAttack()){
 					if (CheckHit(i, j)){
 						m_HitBall->SetColor(D3DXCOLOR(0.2f, 0, 0, 0.8f), D3DXCOLOR(0, 0, 0, 0));
 					}
@@ -663,10 +775,11 @@ void Versus::Render()
 				else{
 					m_HitBall->SetColor(D3DXCOLOR(0, 0, 1, 0.4f), D3DXCOLOR(0, 0, 0, 0));
 				}
-				m_HitBall->Draw(world);
+				m_HitBall->Draw(hit[j].Getworld());
 			}
 		}
 	}
+
 	RECT rc;
 	for (int i = 0; i < 2; i++){
 		if (m_player[i]->GetGauge()->Value <= 0 && m_player[i]->GetGauge()->PrevValue <= 0) {
@@ -682,11 +795,11 @@ void Versus::Render()
 ////////////////////////////////////////////////////////////////
 bool Versus::CheckHit(int attack_player_id, int attack_hit_id)
 {
-	HIT* hit_attack = (m_player[attack_player_id]->HalfBody ? HitAttackR : HitAttack) + attack_hit_id;
+	HitA* hit_attack = m_player[attack_player_id]->GetAttack();
 	D3DXVECTOR3 pos;
-	pos.x = m_player[attack_player_id]->GetModel()->GetBoneAddress()->operator[](hit_attack->BoneIndex).GetModelLocalPosition().x;
-	pos.y = m_player[attack_player_id]->GetModel()->GetBoneAddress()->operator[](hit_attack->BoneIndex).GetModelLocalPosition().y;
-	pos.z = m_player[attack_player_id]->GetModel()->GetBoneAddress()->operator[](hit_attack->BoneIndex).GetModelLocalPosition().z;
+	pos.x = GETMODEL(attack_player_id, hit_attack[attack_hit_id].GetBoneIndex()).GetModelLocalPosition().x;
+	pos.y = GETMODEL(attack_player_id, hit_attack[attack_hit_id].GetBoneIndex()).GetModelLocalPosition().y;
+	pos.z = GETMODEL(attack_player_id, hit_attack[attack_hit_id].GetBoneIndex()).GetModelLocalPosition().z;
 	D3DXVECTOR3 m_wpos;
 	D3DXVec3TransformCoord(&m_wpos, &pos, &m_player[attack_player_id]->GetMatrixWorld());
 	D3DXMATRIX& am = m_player[attack_player_id]->GetMatrixWorld();
@@ -694,10 +807,11 @@ bool Versus::CheckHit(int attack_player_id, int attack_hit_id)
 	am._42 = m_wpos.y;
 	am._43 = m_wpos.z;
 	D3DXVECTOR3 apos(am._41, am._42, am._43);
-	for (int i = 0, n = sizeof(HitDefense) / sizeof(HIT); i < n; i++){
-		pos.x = m_player[1 - attack_player_id]->GetModel()->GetBoneAddress()->operator[](HitDefense[i].BoneIndex).GetModelLocalPosition().x;
-		pos.y = m_player[1 - attack_player_id]->GetModel()->GetBoneAddress()->operator[](HitDefense[i].BoneIndex).GetModelLocalPosition().y;
-		pos.z = m_player[1 - attack_player_id]->GetModel()->GetBoneAddress()->operator[](HitDefense[i].BoneIndex).GetModelLocalPosition().z;
+	HitA* hit_defense = m_player[1 - attack_player_id]->GetDefense();
+	for (int i = 0, n = ATTACKSIZE; i < n; i++){
+		pos.x = GETMODEL(1 - attack_player_id, hit_defense[i].GetBoneIndex()).GetModelLocalPosition().x;
+		pos.y = GETMODEL(1 - attack_player_id, hit_defense[i].GetBoneIndex()).GetModelLocalPosition().y;
+		pos.z = GETMODEL(1 - attack_player_id, hit_defense[i].GetBoneIndex()).GetModelLocalPosition().z;
 		D3DXVec3TransformCoord(&m_wpos, &pos, &m_player[1 - attack_player_id]->GetMatrixWorld());
 		D3DXMATRIX& dm = m_player[1 - attack_player_id]->GetMatrixWorld();
 		dm._41 = m_wpos.x;
@@ -705,7 +819,7 @@ bool Versus::CheckHit(int attack_player_id, int attack_hit_id)
 		dm._43 = m_wpos.z;
 		D3DXVECTOR3 dpos(dm._41, dm._42, dm._43);
 		D3DXVECTOR3 dist = apos - dpos;
-		if (D3DXVec3Length(&dist) <= hit_attack->Radius + HitDefense[i].Radius){
+		if (D3DXVec3Length(&dist) <= hit_attack[attack_hit_id].GetRadius() + hit_defense[i].GetRadius()){
 			return true;
 		}
 	}
@@ -727,14 +841,13 @@ BOOL CALLBACK DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	char aaa[256];
 	int ccnt;
 	switch (uMsg){
-
 	case WM_INITDIALOG:
-		for (int i = 0; i < sizeof(HitAttack) / sizeof(HIT); i++){
-			sprintf(buff, "%.2f", HitAttack[i].Radius);
+		for (int i = 0; i < ATTACKSIZE; i++){
+			Player::GetAttackBuff(buff, i);
 			SetDlgItemText(hwndDlg, IDC_EDIT1 + i, buff);
 		}
-		for (int i = 0; i < sizeof(HitDefense) / sizeof(HIT); i++){
-			sprintf(buff, "%.2f", HitDefense[i].Radius);
+		for (int i = 0; i < DEFENSESIZE; i++){
+			Player::GetDefenseBuff(buff, i);
 			SetDlgItemText(hwndDlg, IDC_EDIT7 + i, buff);
 		}
 		return true;
@@ -743,7 +856,7 @@ BOOL CALLBACK DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		switch (LOWORD(wParam)){
 		case IDOK:
 			CReadHitData* ReadAttack = new CReadHitData("attack.txt");
-			for (int i = 0; i < sizeof(HitAttack) / sizeof(HIT); i++){
+			for (int i = 0; i < ATTACKSIZE; i++){
 				ccnt = GetDlgItemText(hwndDlg, IDC_EDIT1 + i, buf, sizeof(buf));
 				GetDlgItemText(hwndDlg, IDC_STATIC1 + i, buff, sizeof(buff));
 				if (ccnt == 0){
@@ -757,7 +870,7 @@ BOOL CALLBACK DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SAFE_DELETE(ReadAttack);
 
 			CReadHitData* ReadDefense = new CReadHitData("defense.txt");
-			for (int i = 0; i < sizeof(HitDefense) / sizeof(HIT); i++){
+			for (int i = 0; i < DEFENSESIZE; i++){
 				ccnt = GetDlgItemText(hwndDlg, IDC_EDIT7 + i, buf, sizeof(buf));
 				GetDlgItemText(hwndDlg, IDC_STATIC5 + i, buff, sizeof(buff));
 				if (ccnt == 0){
@@ -769,15 +882,18 @@ BOOL CALLBACK DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				ReadDefense->ReadData(aaa);
 			}
 			SAFE_DELETE(ReadDefense);
-			LoadData();
+			Player::LoadData();
+			EndDialog(hwndDlg, IDEXIT);
 			return true;
 
 		}
 		break;
+		
 	case WM_CLOSE:
 		EndDialog(hwndDlg, IDEXIT);
 		return true;
 		break;
 	}
+	
 	return false;
 }

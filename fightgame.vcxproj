@@ -18,6 +18,7 @@
     <ClCompile Include="DebugMgr.cpp" />
     <ClCompile Include="DrawOrder\CGraphicsMeshBone.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="Hit.cpp" />
     <ClCompile Include="HitBox.cpp" />
     <ClCompile Include="LoadHitData.cpp" />
     <ClCompile Include="main.cpp" />
@@ -57,6 +58,7 @@
     <ClInclude Include="Factory\CTextureFactory.h" />
     <ClInclude Include="Factory\FactoryBase.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="Hit.h" />
     <ClInclude Include="HitBox.h" />
     <ClInclude Include="Input_macro.h" />
     <ClInclude Include="LoadHitData.h" />
