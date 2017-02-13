@@ -172,7 +172,7 @@ private:
 	CGauge* m_gauge;
 public:
 	Player(LPDIRECT3DDEVICE9 lpd3ddev, int CPUMode, int id);
-	~Player();
+	virtual ~Player();
 	void Init();
 	void Input();
 	void Update();
@@ -229,11 +229,11 @@ private:
 	float dist;
 	int m_HitMode;
 	int m_CPUMode;
-	CHitBox* m_HitBall;
+	CHitBox* m_HitBall[2];
 	int Dsize;
 public:
 	Versus();
-	~Versus();
+	virtual ~Versus();
 	bool CheckHit(int attack_player_id, int attack_hit_id);
 	D3DXVECTOR3 GetCenter(){ return center; }
 	D3DXVECTOR3 GetUnit(){ return unit; }
